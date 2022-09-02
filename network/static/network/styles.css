@@ -1,0 +1,118 @@
+.navbar{
+    background-color: slateblue;
+}
+
+
+
+.pagination-bar{
+    margin-top: 40px;
+}
+
+#posts-view{
+    padding:20px 100px;
+}
+
+.single-post{
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0px;
+}
+
+.single-post:hover{
+    border: none;
+    outline: none;
+    box-shadow: 0px 0px 10px steelblue;
+}
+
+.user-bar{
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit{
+    border:none;
+    outline: none;
+    background-color: white;
+}
+
+.edit:hover{
+    border: none;
+    outline: none;
+}
+
+.timestamp{
+    color: grey;
+}
+
+.likes{
+    display: flex;
+    margin-top: 10px;
+}
+
+.like_count{
+    margin: 0px 0px 0px 5px;
+    padding-top: 3px;
+}
+
+.user-info{
+    padding: 20px 100px;
+}
+
+#follow{
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+}
+
+#create-post{
+    padding: 20px 100px;
+}
+
+.btn-style-blue{
+    border: none;
+    outline: none;
+    color: black;
+    font-weight: bold;
+    font-size: large;
+    background-color: lightblue;
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+.btn-style-blue:hover{
+    border: none;
+    outline: none;
+    box-shadow: 0px 0px 5px steelblue;
+}
+
+form{
+    padding: 20px 100px;
+}
+
+#save{
+    background-color: green;
+    border-radius: 5px;
+    color: white;
+}
+
+.content-box{
+    border: none;
+    outline: none;
+    width: 100%;
+    background-color: white;
+    height: min-content;
+    word-wrap: break-word;
+    padding: 20px;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+#usr{
+    margin-bottom: 20px;
+}
+
+.pgn{
+    margin-top: 20px;
+}

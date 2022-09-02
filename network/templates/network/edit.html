@@ -1,0 +1,11 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block title %}
+    Edit Post
+{% endblock %}
+
+{% block body %}
+    <div><label>{{ post.user.username }}</label></div>
+    <div><textarea name="edited-post" cols="30" rows="20">{{ post.post }}</textarea></div>
+{% endblock %}
