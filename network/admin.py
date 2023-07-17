@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import User, Posts, Likes, Followers, Followings
+from .models import User, Post, Like, Follower, Following
 
 # Register your models here.
 admin.site.register(User)
-admin.site.register(Posts)
-admin.site.register(Likes)
-admin.site.register(Followers)
-admin.site.register(Followings)
+admin.site.register(Post)
+admin.site.register(Like)
+admin.site.register(Follower)
+admin.site.register(Following)
