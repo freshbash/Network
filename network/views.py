@@ -155,7 +155,7 @@ def profile(request, usr_name):
     }
 
     # get the post of that user.
-    user_posts = Post.objects.filter(user=user).order_by('-datetime').all()
+    user_posts = Post.objects.filter(user=profileUser).order_by('-datetime').all()
     user_details = []
     for post in user_posts:
         has_liked = False
@@ -171,7 +171,7 @@ def profile(request, usr_name):
     page = p.page(1).object_list
     # pass it to the render function.
     return render(request, "network/profile.html", {
-        "user_data": user, "page": page, "is_following": is_following,
+        "user_data": profileUser, "page": page, "is_following": is_following,
         "connections": connections, "num_pages": num_pages
     })
 
