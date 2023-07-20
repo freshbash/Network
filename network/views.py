@@ -10,47 +10,65 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
-from .models import Post, User, Follower, Following, Like
+from .models import Post, User, Follower, Like
 
 
 #=========================================================================================================================================
 #Helper functions
 
+#Check if the post is liked by the viewing user.
+def checkLiked(user, post):
+    has_liked = False
+    #If the user has liked the post then set has_liked to true
+    try:
+        if(Like.objects.filter(user_post=post, liked_by=user.id)):
+            has_liked = True
+    except Like.DoesNotExist:
+        pass
+    return has_liked
+
+#-----------------------------------------------------------------------------------------------------------------------------------------
+
 #Function to take in data retrived from the db and the user object and return a list of formatted posts.
 def formatPosts(user, posts):
     formattedPosts = []
     for post in posts:
-        has_liked = False
-        #If the user has liked the post then set has_liked to true
-        try:
-            if(Like.objects.filter(user_post=post, liked_by=user.id)):
-                has_liked = True
-        except Like.DoesNotExist:
-            pass
-
-        #Append the post and has_liked state to the list as a dictionary.
-        formattedPosts.append({"content": post, "liked": has_liked})
+        #Check if the post is already liked by the viewing user
+        has_liked = checkLiked(user, post)
+        #Append the serialized post and has_liked state to the list as a dictionary.
+        formattedPosts.append({"content": post.serialize(), "liked": has_liked})
     
     return formattedPosts
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
+#Function to create a Pagination object and return the number of pages and contents for page 1.
+def createPagination(posts, posts_per_page, page_num):
+    #Create a pagination object
+    p = Paginator(posts, posts_per_page)
 
+    #Get the contents of the required page
+    page = list(p.page(page_num).object_list)
+
+    #Return the number of pages and first page content
+    return p.num_pages, page
 #=========================================================================================================================================
 
 
-#Responds with all the posts
+#Responds with page 1 of all the posts
 def index(request):
-    # Get all the posts from the database.
-    all_posts = list(Post.objects.all().order_by("-datetime"))
+    #Get the data for posts in page 1, Get the number of pages, Get the page number
+
+    #Get all the posts from the db
+    all_posts = list(Post.objects.all().order_by("-timestamp"))
+
+    #Format the posts
     formattedPosts = formatPosts(request.user, all_posts)
-    p = Paginator(formattedPosts, 10)
-    #==========================================================================================
-    num_pages = [num for num in range(1, p.num_pages + 1)]
-    #==========================================================================================
-    page1 = list(p.page(1).object_list)
+
+    #Paginate the posts and get page 1
+    num_pages, page = createPagination(formattedPosts, 10, 1)
     return render(request, "network/index.html", {
-        "num_pages": num_pages, "page": page1
+        "data": {"page": page, "num_pages": num_pages, "page_num": 1}
     })
 
 
@@ -143,37 +161,33 @@ def profile(request, usr_name):
     #Get the connections of that user.
     is_following = False
     try:
-        if(Follower.objects.filter(user=profileUser, followers=request.user)):
+        if(Follower.objects.filter(user=profileUser, followed_by=request.user)):
             is_following = True
     except Follower.DoesNotExist:
         pass
     followers = Follower.objects.filter(user=profileUser).count()
-    followings = Follower.objects.filter(followers=profileUser).count()
+    followings = Follower.objects.filter(followed_by=profileUser).count()
     connections = {
         "followers": followers,
         "followings": followings
     }
 
-    # get the post of that user.
+    #Get the posts of that user.
     user_posts = Post.objects.filter(user=profileUser).order_by('-datetime').all()
-    user_details = []
-    for post in user_posts:
-        has_liked = False
-        try:
-            if (Like.objects.filter(user_post=post, liked_by=request.user.id)):
-                has_liked = True
-        except Like.DoesNotExist:
-            pass
-        user_detail = {"post": post, "liked": has_liked}
-        user_details.append(user_detail)
-    p = Paginator(user_details, 10)
-    num_pages = [num for num in range(1, p.num_pages + 1)]
-    page = p.page(1).object_list
+
+    #Use the retrieved posts to determine which of the posts the viewer has liked. 
+    user_posts = formatPosts(request.user, user_posts)
+
+    #Create pagination
+    num_pages, page = createPagination(user_posts, 10)
+
     # pass it to the render function.
     return render(request, "network/profile.html", {
         "user_data": profileUser, "page": page, "is_following": is_following,
         "connections": connections, "num_pages": num_pages
     })
+
+
 
 @login_required
 @csrf_exempt
@@ -188,18 +202,22 @@ def follow(request, usr):
     if data["followers"] == True:
         follower = Follower(user=user, followers=request.user)
         follower.save()
-        following = Following(user=request.user, followings=user)
-        following.save()
+        # following = Following(user=request.user, followings=user)
+        # following.save()
     elif data["followers"] == False:
         Follower.objects.filter(user=user, followers=request.user).delete()
-        Following.objects.filter(user=request.user, followings=user).delete()
+        # Following.objects.filter(user=request.user, followings=user).delete()
 
 
     return HttpResponse(status=204) 
 
+
+#Responds with the postings of the people the user follows
 @login_required
 def display_posts(request):
-    followings_list = [following.followings for following in Following.objects.filter(user=request.user)]
+
+    #Get the list of people the user follows
+    followings_list = [person.user for person in Follower.objects.filter(followed_by=request.user)]
     
     posts = []
 
@@ -226,6 +244,8 @@ def display_posts(request):
         "page": page, "num_pages": num_pages
     })
 
+
+#Woefully inefficient and violating!!!
 def load_nthpage(request, page_num, path=None):
     if path == "all":
         if page_num == 1:
@@ -251,21 +271,21 @@ def load_nthpage(request, page_num, path=None):
         if page_num == 1:
             return HttpResponseRedirect(reverse("following"))
 
-        followings_list = [following.followings for following in Following.objects.filter(user=request.user)]
+        # followings_list = [following.followings for following in Following.objects.filter(user=request.user)]
     
         posts = []
 
-        for user in followings_list:
-            user_posts = list(Post.objects.filter(user=user).order_by('-datetime').all())
-            for post in user_posts:
-                has_liked = False
-                try:
-                    if(Like.objects.filter(user_post=post, liked_by=request.user)):
-                        has_liked = True
-                except Like.DoesNotExist:
-                    pass
-                post_details = {"post": post, "liked": has_liked}
-                posts.append(post_details)
+        # for user in followings_list:
+        #     user_posts = list(Post.objects.filter(user=user).order_by('-datetime').all())
+        #     for post in user_posts:
+        #         has_liked = False
+        #         try:
+        #             if(Like.objects.filter(user_post=post, liked_by=request.user)):
+        #                 has_liked = True
+        #         except Like.DoesNotExist:
+        #             pass
+        #         post_details = {"post": post, "liked": has_liked}
+        #         posts.append(post_details)
 
         p = Paginator(posts, 10)
 
@@ -294,10 +314,10 @@ def load_nthpage(request, page_num, path=None):
         except Follower.DoesNotExist:
             pass
         followers = len(list(Follower.objects.filter(user=user)))
-        followings = len(list(Following.objects.filter(user=user)))
+        # followings = len(list(Following.objects.filter(user=user)))
         connections = {
             "followers": followers,
-            "followings": followings
+            # "followings": followings
         }
 
         # get the post of that user.
@@ -306,7 +326,7 @@ def load_nthpage(request, page_num, path=None):
         for post in user_posts:
             has_liked = False
             try:
-                if(Like.object.filter(user_post=post, liked_by          =request.user.id)):
+                if(Like.object.filter(user_post=post, liked_by=request.user.id)):
                     has_liked = True
             except Like.DoesNotExist:
                 pass

@@ -13,7 +13,7 @@ class User(AbstractUser):
 #Stores the followers of users
 class Follower(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followers")
-    followers = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
+    followed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
 
 
 #NO NEED! REMOVE IT!
@@ -27,17 +27,17 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     post = models.CharField(max_length=1000, blank=False, null=False)
     likes = models.IntegerField(default=0)
-    datetime = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"username: {self.user.username}, post: {self.post}"
 
     def serialize(self):
         return {
-            'user': self.user,
+            'user': self.user.username,
             'post': self.post,
             'likes': self.likes,
-            'datetime': self.datetime
+            'timestamp': self.timestamp
         }
 
 #INTENTION UNCLEAR
