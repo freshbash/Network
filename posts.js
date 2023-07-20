@@ -57,3 +57,18 @@
 //                 <H3>No posts to display!</H3>
 //         {% endfor %}
 
+//Component representing all posts in a page
+
+//Import the Post and PageNavigator components
+import Post from './post.js';
+import PageNavigator from './page-navigator.js';
+
+const AllPosts = (props) => {
+    return (
+        <div>
+            <Post />
+            <PageNavigator />
+        </div>
+    )
+}
+

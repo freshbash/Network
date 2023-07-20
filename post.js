@@ -1,6 +1,6 @@
 //This component represents each individual tile
 
-const post = (props) => {
+const Post = (props) => {
     //State variables
     const [numLikes, setNumLikes] = React.useState(0);
     const [hasLiked, setHasLiked] = React.useState(false);
@@ -12,7 +12,9 @@ const post = (props) => {
                 <div id="user-name-post"><a href="/user/"></a></div>                
                 <div><button class="edit" value="">Edit</button></div>
             </div>                    
-            <div class="content-box" id=""></div>
+            <div class="content-box" id="">
+                <textarea></textarea>
+            </div>
             <div class="timestamp"></div>
             <div class="likes">
                 <div id="img" class="img">
@@ -23,3 +25,5 @@ const post = (props) => {
         </div>
     )
 }
+
+export default Post;

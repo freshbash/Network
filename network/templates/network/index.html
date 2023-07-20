@@ -3,23 +3,7 @@
 
 {% block body %}
     <div class="fs-2 fw-bold">Trending</div>
-    <div id="all-posts-root">
-    </div>
-    <div>
-        <nav class="pgn" aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li id="prev" class="page-item disabled">
-                    <a id="link-prev" href="" class="page-link" tabindex="-1" aria-disabled="true">Previous</a>
-                </li>
-                {% for page in num_pages %}
-                    <li id="item-{{ page }}" class="page-item"><a id="link-{{ page }}" class="page-link" href="{% url 'nthpage' 'all' page %}">{{ page }}</a></li>
-                {% endfor %}
-                <li id="next" class="page-item">
-                    <a id="link-next" href="" class="page-link">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <div id="all-posts-root"></div>
 
 {% block script %}
     <script src="{% static 'network/posts.js' %}"></script>
