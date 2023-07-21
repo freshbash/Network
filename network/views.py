@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.db import transaction
 
 from .models import Post, User, Follower, Like
 
@@ -30,13 +31,15 @@ def checkLiked(user, post):
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
 #Function to take in data retrived from the db and the user object and return a list of formatted posts.
-def formatPosts(user, posts):
+def formatPosts(user, dbposts):
     formattedPosts = []
-    for post in posts:
+    for post in dbposts:
         #Check if the post is already liked by the viewing user
         has_liked = checkLiked(user, post)
+        #Check if the owner and viewer of the post are the same
+        is_owner = user.username == post.user.username
         #Append the serialized post and has_liked state to the list as a dictionary.
-        formattedPosts.append({"content": post.serialize(), "liked": has_liked})
+        formattedPosts.append({"content": post.serialize(), "liked": has_liked, "is_owner": is_owner})
     
     return formattedPosts
 
@@ -190,7 +193,7 @@ def profile(request, usr_name):
 
 
 @login_required
-@csrf_exempt
+# @csrf_exempt
 def follow(request, usr):
 
     try:
@@ -202,11 +205,8 @@ def follow(request, usr):
     if data["followers"] == True:
         follower = Follower(user=user, followers=request.user)
         follower.save()
-        # following = Following(user=request.user, followings=user)
-        # following.save()
     elif data["followers"] == False:
         Follower.objects.filter(user=user, followers=request.user).delete()
-        # Following.objects.filter(user=request.user, followings=user).delete()
 
 
     return HttpResponse(status=204) 
@@ -342,46 +342,72 @@ def load_nthpage(request, page_num, path=None):
             "connections": connections, "num_pages": num_pages
         })         
 
-@csrf_exempt
+
+#Entertains requests to make updates to a post's text content
+# @csrf_exempt
 @login_required
 def edit(request, post_id):
-    # Get the post details
 
-    if request.method == 'POST':
-        post = Post.objects.get(pk=post_id)
+    #Handle PUT request
+    if request.method == "PUT":
+
+        result = True
+
+        #Get the concerned post object
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            result = False
         
+        #Convert the body from the request from json to a dictionary
         data = json.loads(request.body)
 
-        edited = data["post"]
+        #Get the updated post string
+        newContent = data.get("content", post["post"])
 
-        post.post = edited
+        #Modify the post object with the new post string
+        post.post = newContent
 
+        #Save the changes
         post.save()
 
-        return JsonResponse({"post": post.post}, safe=False ,status=204)
+        if result == True:
+            #return a successful response
+            return JsonResponse({"post": post.post}, safe=False ,status=204)
+        else:
+            return JsonResponse(status=400)
     
     return HttpResponse("Error: Post request required", status=403)
 
-@csrf_exempt
+
+#Function to entertain updates to the like count of a post
+# @csrf_exempt
 @login_required
+@transaction.atomic
 def like(request, post_id):
+
+    #Handle PUT request
     if request.method == 'PUT':
+
+        #Convert the body of the request from json format
         data = json.loads(request.body)
 
+        #Get the post in question
         post = Post.objects.get(pk=post_id)
 
-        if data["increment"] == True:
-            post.likes += 1
-            liked = Like(user_post=post, like=request.user)
-            liked.save()
-        elif data["increment"] == False:
-            post.likes -= 1
-            Like.objects.filter(user_post=post, like=request.user).delete()
+        #Increment/decrement like count and Add/Delete a like object.
+        if data.get("hasLiked") == True:
+            post.likes = post.likes + 1
+            Like(user_post=post, liked_by=request.user).save()
+        else:
+            post.likes = post.likes - 1
+            Like.objects.filter(user_post=post, liked_by=request.user).delete()
+
+        #Save the changes
         post.save()
 
-        likes = post.likes
-
-        return JsonResponse({"likes": likes}, status=204)
+        #Return the number of likes as a json response
+        return JsonResponse({"likes": post.likes}, status=204)
 
 
     return HttpResponse("Error: PUT request required", status=403)
