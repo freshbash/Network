@@ -3,7 +3,7 @@
 
 {% block body %}
     <div class="fs-2 fw-bold">Trending</div>
-    <div id="all-posts-root"></div>
+    <div id="all-posts-root" data-data="{{ data|json_script }}"></div>
 
 {% block script %}
     <script src="{% static 'network/posts.js' %}"></script>

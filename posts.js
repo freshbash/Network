@@ -63,12 +63,27 @@
 import Post from './post.js';
 import PageNavigator from './page-navigator.js';
 
-const AllPosts = (props) => {
+//Component that contains all the user posts
+const AllPosts = () => {
+
+    //State variable to store the data received from the template
+    const [data, setData] = React.useState({});
+    const [posts, setPosts] = React.useState([]);
+
+    //Get data from the template and update state once the component mounts to the dom.
+    React.useEffect(() => {
+        const dataElement = document.querySelector("#all-posts-root");
+        let dataReceived = JSON.parse(dataElement.getAttribute("data-data"));
+        setData(dataReceived);
+        const listItems = data.page.map(post => {
+            <Post postData={post} />
+        });
+        setPosts(listItems);
+    })
     return (
-        <div>
-            <Post />
-            <PageNavigator />
+        <div>            
+            {posts}
+            <PageNavigator numPages={data.num_pages} pageNum={data.page_num} />
         </div>
     )
 }
-
