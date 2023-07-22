@@ -74,12 +74,13 @@ const AllPosts = () => {
     React.useEffect(() => {
         const dataElement = document.querySelector("#all-posts-root");
         let dataReceived = JSON.parse(dataElement.getAttribute("data-data"));
+        console.log(dataReceived);
         setData(dataReceived);
-        const listItems = data.page.map(post => {
-            <Post postData={post} />
-        });
+        console.log(data);
+        const listItems = data.page.map(post => (<Post key={post.content.id} postData={post} />));
         setPosts(listItems);
-    })
+    });
+
     return (
         <div>            
             {posts}
@@ -87,3 +88,9 @@ const AllPosts = () => {
         </div>
     )
 }
+
+
+//Mount AllPosts to the DOM
+const domNode = document.querySelector("#all-posts-root");
+const root = ReactDom.createRoot(domNode);
+root.render(<AllPosts />);

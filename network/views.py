@@ -71,7 +71,7 @@ def index(request):
     #Paginate the posts and get page 1
     num_pages, page = createPagination(formattedPosts, 10, 1)
     return render(request, "network/index.html", {
-        "data": {"page": json.dumps(page), "num_pages": num_pages, "page_num": 1}
+        "data": {"page": page, "num_pages": num_pages, "page_num": 1}
     })
 
 

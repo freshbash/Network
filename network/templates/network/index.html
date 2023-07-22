@@ -6,6 +6,6 @@
     <div id="all-posts-root" data-data="{{ data|json_script }}"></div>
 
 {% block script %}
-    <script src="{% static 'network/posts.js' %}"></script>
+    <script src="{% static 'network/posts.js' %}" type="module"></script>
 {% endblock %}
 {% endblock %}
