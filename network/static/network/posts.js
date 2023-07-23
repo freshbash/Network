@@ -59,9 +59,11 @@
 
 //Component representing all posts in a page
 
-//Import the Post and PageNavigator components
-import Post from './post.js';
-import PageNavigator from './page-navigator.js';
+//Import the dependencies
+import { React } from "https://unpkg.com/react@18/umd/react.development.js";
+import { ReactDOM } from "https://unpkg.com/react-dom@18/umd/react-dom.development.js";
+import { Post } from './post.js';
+import { PageNavigator } from './page-navigator.js';
 
 //Component that contains all the user posts
 const AllPosts = () => {
@@ -92,5 +94,5 @@ const AllPosts = () => {
 
 //Mount AllPosts to the DOM
 const domNode = document.querySelector("#all-posts-root");
-const root = ReactDom.createRoot(domNode);
+const root = ReactDOM.createRoot(domNode);
 root.render(<AllPosts />);
