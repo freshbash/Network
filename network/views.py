@@ -341,26 +341,24 @@ def load_nthpage(request, page_num, path=None):
 
 
 #Entertains requests to make updates to a post's text content
-# @csrf_exempt
+@csrf_exempt
 @login_required
 def edit(request, post_id):
 
     #Handle PUT request
     if request.method == "PUT":
 
-        result = True
-
         #Get the concerned post object
         try:
             post = Post.objects.get(pk=post_id)
         except Post.DoesNotExist:
-            result = False
+            return HttpResponse("Error: Post does not exist anymore", status=401)
         
         #Convert the body from the request from json to a dictionary
         data = json.loads(request.body)
 
         #Get the updated post string
-        newContent = data.get("content", post["post"])
+        newContent = data.get("content", post.post)
 
         #Modify the post object with the new post string
         post.post = newContent
@@ -368,13 +366,10 @@ def edit(request, post_id):
         #Save the changes
         post.save()
 
-        if result == True:
-            #return a successful response
-            return JsonResponse({"post": post.post}, safe=False ,status=204)
-        else:
-            return JsonResponse(status=400)
+        #return a successful response
+        return JsonResponse({"post": post.post} ,status=200)
     
-    return HttpResponse("Error: Post request required", status=403)
+    return HttpResponse("Error: PUT request required", status=403)
 
 
 #Function to entertain updates to the like count of a post

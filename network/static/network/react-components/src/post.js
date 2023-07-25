@@ -23,7 +23,7 @@ const Post = (props) => {
     function handleLike() {        
 
         //Send PUT request to the server to update the likes
-        fetch(`/like/${props.postData.content.id}`, {
+        fetch(`like/${props.postData.content.id}`, {
             method: "PUT",
             body: JSON.stringify({                
                 "hasLiked": !hasLiked
@@ -50,6 +50,7 @@ const Post = (props) => {
     //Handle save edit button click
     function handleSave() {
 
+        //Get the newly inputted content
         const newContent = document.querySelector("#enabledTextBox").value;
 
         //Set edit mode to off
@@ -57,19 +58,14 @@ const Post = (props) => {
 
         //If the content is not an empty string and is different from the existing content, send update request to server
         if (newContent !== postContent && newContent !== '') {
-            //Send a PUT request to the server
-            fetch(`/edit/${props.postData.content.id}`, {
+            //Send a PUT request to the server            
+            fetch(`edit/${props.postData.content.id}`, {
                 method: "PUT",
                 body: JSON.stringify({
-                    "content": postContent
+                    "content": newContent
                 })
             })
-            .then(response => {
-                //If the response code is 204, convert the response to json
-                if (response.status === 204) {
-                    response.json()
-                }
-            })
+            .then(response => response.json()) //convert the response to json
             .then(data => setPostContent(data.post)); //Update the state
         }
     }
@@ -82,7 +78,7 @@ const Post = (props) => {
                 {props.postData.is_owner && !editMode ? editButton : props.postData.is_owner && editMode ? cancelButton : null}
             </div>                    
             <div className="content-box" id="">
-                {editMode ? <textarea id="enabledTextBox">{postContent}</textarea> : <div>{postContent}</div>}
+                {editMode ? <textarea id="enabledTextBox" defaultValue={postContent}></textarea> : <div>{postContent}</div>}
                 {editMode ? saveButton : null}
             </div>
             <div className="timestamp">{new Date(props.postData.content.timestamp).toString()}</div>
