@@ -373,7 +373,7 @@ def edit(request, post_id):
 
 
 #Function to entertain updates to the like count of a post
-# @csrf_exempt
+@csrf_exempt
 @login_required
 @transaction.atomic
 def like(request, post_id):
@@ -399,7 +399,7 @@ def like(request, post_id):
         post.save()
 
         #Return the number of likes as a json response
-        return JsonResponse({"likes": post.likes}, status=204)
+        return JsonResponse({"likes": post.likes}, status=200)
 
 
     return HttpResponse("Error: PUT request required", status=403)

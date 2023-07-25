@@ -23,7 +23,7 @@ const Post = (props) => {
     function handleLike() {        
 
         //Send PUT request to the server to update the likes
-        fetch(`like/${props.postData.content.id}`, {
+        fetch(`/like/${props.postData.content.id}`, {
             method: "PUT",
             body: JSON.stringify({                
                 "hasLiked": !hasLiked
@@ -59,7 +59,7 @@ const Post = (props) => {
         //If the content is not an empty string and is different from the existing content, send update request to server
         if (newContent !== postContent && newContent !== '') {
             //Send a PUT request to the server            
-            fetch(`edit/${props.postData.content.id}`, {
+            fetch(`/edit/${props.postData.content.id}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     "content": newContent
