@@ -71,8 +71,12 @@ def index(request, pageNum=1):
     #Paginate the posts and get page 1
     num_pages, page = createPagination(formattedPosts, 10, pageNum)
     return render(request, "network/index.html", {
-        "data": {"page": page, "num_pages": num_pages, "page_num": pageNum}
+        "data": {"page": page, "num_pages": num_pages, "page_num": pageNum, "path": "/all"}
     })
+
+#Function that redirects all request to "/all" to "/"
+def redirect(request):
+    return HttpResponseRedirect(reverse("index"))
 
 
 #Logs the user in and redirects to the index page
@@ -192,7 +196,7 @@ def profile(request, usr_name):
 
     # pass it to the render function.
     return render(request, "network/profile.html", {
-        "data": {"page": page, "num_pages": num_pages, "page_num": 1}
+        "data": {"page": page, "num_pages": num_pages, "page_num": 1, "path": "/user/"+usr_name}
     })
 
 
@@ -219,7 +223,7 @@ def follow(request, usr):
 
 #Responds with the postings of the people the user follows
 @login_required
-def display_posts(request):
+def display_posts(request, pageNum=1):
 
     #Get the list of people the user follows
     followings_list = [person.user for person in Follower.objects.filter(followed_by=request.user)]
@@ -234,19 +238,27 @@ def display_posts(request):
         posts.extend(formattedPosts)
     
     #Create a pagination object, get the first page and the number of pages
-    pages, page = createPagination(posts, 10, 1)
+    pages, page = createPagination(posts, 10, pageNum)
 
     #Render template with the data
     return render(request, "network/following.html", {
-        "data": {"page": page, "num_pages": pages, "page_num": 1}
+        "data": {"page": page, "num_pages": pages, "page_num": pageNum, "path": "/following"}
     })
 
 
-#Woefully inefficient and violating!!!
-#Loads the appropriate page
+#Loads the appropriate page of posts
 def load_nthpage(request, page_num, path=None):
-    if path is None:
+
+    #If path is not specified, then load the appropriate page of index
+    if path == "all":
         return index(request, page_num)
+    
+    #If path is "following", then load the appropriate page of following
+    elif path == "following":
+        return display_posts(request, page_num)
+    
+    else:
+        pass
     
 
 
