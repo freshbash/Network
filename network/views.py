@@ -158,14 +158,19 @@ def create(request):
 @login_required
 @csrf_exempt
 def profile(request, usr_name, page_num=1):
-
+    
+    #Check if the user is viewing their own profile
+    is_own_profile = False
+    if request.user.username == usr_name:
+        is_own_profile = True
+    
     # get the details of the particular user.
     try:
         profileUser = User.objects.get(username=usr_name)
     except User.DoesNotExist:
         return HttpResponse(status=404)
 
-    #Check if the viewer is following the user or not
+    #Check if the viewer is following the profile or not, if the viewer and profile are not the same
     is_following = False
     try:
         if(Follower.objects.filter(user=profileUser, followed_by=request.user)):
@@ -196,29 +201,39 @@ def profile(request, usr_name, page_num=1):
 
     # pass it to the render function.
     return render(request, "network/profile.html", {
+        "user_data": {"username": usr_name, "connections": connections, "bio": profileUser.bio, "is_own_profile": is_own_profile},
+        "component_capsule": {"username": usr_name, "follower_count": connections["followers"], "is_following": is_following},
         "data": {"page": page, "num_pages": num_pages, "page_num": page_num, "path": "/user/"+usr_name}
     })
 
 
-
+#API endpoint to handle follow/unfollow requests
 @login_required
-# @csrf_exempt
+@csrf_exempt
 def follow(request, usr):
+    #Handle PUT requests
+    if request.method == "PUT":
+        try:
+            user = User.objects.get(username=usr)
+        except User.DoesNotExist:
+            return HttpResponse(status=404)
+        
+        #Get the request body
+        data = json.loads(request.body)
 
-    try:
-        user = User.objects.get(username=usr)
-    except User.DoesNotExist:
-        return HttpResponse(status=404)
-    
-    data = json.loads(request.body)
-    if data["followers"] == True:
-        follower = Follower(user=user, followers=request.user)
-        follower.save()
-    elif data["followers"] == False:
-        Follower.objects.filter(user=user, followers=request.user).delete()
+        #Check if it is a request to follow or unfollow
+        if data.get("follow") == True:
+            #Create a new follower
+            follower = Follower(user=user, followed_by=request.user)
+            follower.save()
+        else:
+            #Delete the follower
+            Follower.objects.filter(user=user, followed_by=request.user).delete()
 
-
-    return HttpResponse(status=204) 
+        #Return response with 204 status code
+        return HttpResponse(status=204)
+    else:
+        return HttpResponse(status=403)
 
 
 #Responds with the postings of the people the user follows
@@ -253,111 +268,13 @@ def load_nthpage(request, page_num, usn=None, path=None):
     if path == "all":
         return index(request, page_num)
     
-    #If path is "following", then load the appropriate page of following
+    #If path is "following", then load the appropriate page of followings
     elif path == "following":
         return display_posts(request, page_num)
-    
+    #If path is "user", then load the appropriate page of user posts
     elif path == "user":
         return profile(request, usn, page_num)
-    
-
-
-
-    #Inefficient code
-    # if path == "all":
-    #     if page_num == 1:
-    #         return HttpResponseRedirect(reverse("index"))
-    #     post_details = []
-    #     all_posts = list(Post.objects.all().order_by("-datetime"))
-    #     for post in all_posts:
-    #         has_liked = False
-    #         try:
-    #             if(Like.objects.filter(user_post=post, liked_by=request.user)):
-    #                 has_liked = True
-    #         except Like.DoesNotExist:
-    #             pass
-    #         post_detail = {"post": post, "liked": has_liked}
-    #         post_details.append(post_detail)
-    #     p = Paginator(post_details, 10)
-    #     num_pages = [num for num in range(1, p.num_pages + 1)]
-    #     page = p.page(page_num).object_list
-    #     return render(request, "network/index.html", {
-    #         "num_pages": num_pages, "page": page
-    #     })
-    # elif path == "following":
-    #     if page_num == 1:
-    #         return HttpResponseRedirect(reverse("following"))
-
-    #     # followings_list = [following.followings for following in Following.objects.filter(user=request.user)]
-    
-    #     posts = []
-
-    #     # for user in followings_list:
-    #     #     user_posts = list(Post.objects.filter(user=user).order_by('-datetime').all())
-    #     #     for post in user_posts:
-    #     #         has_liked = False
-    #     #         try:
-    #     #             if(Like.objects.filter(user_post=post, liked_by=request.user)):
-    #     #                 has_liked = True
-    #     #         except Like.DoesNotExist:
-    #     #             pass
-    #     #         post_details = {"post": post, "liked": has_liked}
-    #     #         posts.append(post_details)
-
-    #     p = Paginator(posts, 10)
-
-    #     num_pages = [num for num in range(1, p.num_pages + 1)]
-
-    #     page = p.page(page_num).object_list
-
-
-    #     return render(request, "network/following.html", {
-    #         "page": page, "num_pages": num_pages
-    #     })
-    # elif path == "profile":
-    #     if page_num == 1:
-    #        return HttpResponseRedirect(f"/user/{request.user.username}")
-    #     # get the details of the particular user.
-    #     try:
-    #         user = User.objects.get(username=request.user.username)
-    #     except User.DoesNotExist:
-    #         return HttpResponse(status=404)
-
-    #     #Get the connections of that user.
-    #     is_following = False
-    #     try:
-    #         if(Follower.objects.filter(user=user, followers=request.user)):
-    #             is_following = True
-    #     except Follower.DoesNotExist:
-    #         pass
-    #     followers = len(list(Follower.objects.filter(user=user)))
-    #     # followings = len(list(Following.objects.filter(user=user)))
-    #     connections = {
-    #         "followers": followers,
-    #         # "followings": followings
-    #     }
-
-    #     # get the post of that user.
-    #     user_posts = Post.objects.filter(user=user).order_by('-datetime').all()
-    #     user_details = []
-    #     for post in user_posts:
-    #         has_liked = False
-    #         try:
-    #             if(Like.object.filter(user_post=post, liked_by=request.user.id)):
-    #                 has_liked = True
-    #         except Like.DoesNotExist:
-    #             pass
-            
-    #         user_detail = {"post": post, "liked": has_liked}
-    #         user_details.append(user_detail)
-    #     p = Paginator(user_details, 10)
-    #     num_pages = [num for num in range(1, p.num_pages + 1)]
-    #     page = p.page(page_num).object_list
-    #     # pass it to the render function.
-    #     return render(request, "network/profile.html", {
-    #         "user_data": user, "page": page, "is_following": is_following,
-    #         "connections": connections, "num_pages": num_pages
-    #     })         
+       
 
 
 #Entertains requests to make updates to a post's text content
