@@ -161,33 +161,38 @@ def profile(request, usr_name):
     except User.DoesNotExist:
         return HttpResponse(status=404)
 
-    #Get the connections of that user.
+    #Check if the viewer is following the user or not
     is_following = False
     try:
         if(Follower.objects.filter(user=profileUser, followed_by=request.user)):
             is_following = True
     except Follower.DoesNotExist:
         pass
+
+    #Get the count of followers of that user
     followers = Follower.objects.filter(user=profileUser).count()
+
+    #Get the count of users the user is following
     followings = Follower.objects.filter(followed_by=profileUser).count()
+
+    #Create a connection count object
     connections = {
         "followers": followers,
         "followings": followings
     }
 
     #Get the posts of that user.
-    user_posts = Post.objects.filter(user=profileUser).order_by('-datetime').all()
+    user_posts = Post.objects.filter(user=profileUser).order_by('-timestamp').all()
 
-    #Use the retrieved posts to determine which of the posts the viewer has liked. 
+    #Put the retrieved posts in an appropriate format
     user_posts = formatPosts(request.user, user_posts)
 
-    #Create pagination
-    num_pages, page = createPagination(user_posts, 10)
+    #Create pagination object
+    num_pages, page = createPagination(user_posts, 10, 1)
 
     # pass it to the render function.
     return render(request, "network/profile.html", {
-        "user_data": profileUser, "page": page, "is_following": is_following,
-        "connections": connections, "num_pages": num_pages
+        "data": {"page": page, "num_pages": num_pages, "page_num": 1}
     })
 
 
@@ -231,7 +236,7 @@ def display_posts(request):
     #Create a pagination object, get the first page and the number of pages
     pages, page = createPagination(posts, 10, 1)
 
-
+    #Render template with the data
     return render(request, "network/following.html", {
         "data": {"page": page, "num_pages": pages, "page_num": 1}
     })
