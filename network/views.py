@@ -157,7 +157,7 @@ def create(request):
 #Responds with the details of the requested user
 @login_required
 @csrf_exempt
-def profile(request, usr_name):
+def profile(request, usr_name, page_num=1):
 
     # get the details of the particular user.
     try:
@@ -192,11 +192,11 @@ def profile(request, usr_name):
     user_posts = formatPosts(request.user, user_posts)
 
     #Create pagination object
-    num_pages, page = createPagination(user_posts, 10, 1)
+    num_pages, page = createPagination(user_posts, 10, page_num)
 
     # pass it to the render function.
     return render(request, "network/profile.html", {
-        "data": {"page": page, "num_pages": num_pages, "page_num": 1, "path": "/user/"+usr_name}
+        "data": {"page": page, "num_pages": num_pages, "page_num": page_num, "path": "/user/"+usr_name}
     })
 
 
@@ -247,7 +247,7 @@ def display_posts(request, pageNum=1):
 
 
 #Loads the appropriate page of posts
-def load_nthpage(request, page_num, path=None):
+def load_nthpage(request, page_num, usn=None, path=None):
 
     #If path is not specified, then load the appropriate page of index
     if path == "all":
@@ -257,8 +257,8 @@ def load_nthpage(request, page_num, path=None):
     elif path == "following":
         return display_posts(request, page_num)
     
-    else:
-        pass
+    elif path == "user":
+        return profile(request, usn, page_num)
     
 
 
