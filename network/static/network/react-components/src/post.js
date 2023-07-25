@@ -72,9 +72,9 @@ const Post = (props) => {
     
 
     return (
-        <div className="single-post">
-            <div className="user-bar">
-                <div id="user-name-post"><a href={`/user/${props.postData.content.user}`}>{props.postData.content.user}</a></div>
+        <div className="single-post w-100">
+            <div className="d-flex flex-row justify-content-between">
+                <div id="user-name-post"><a className="link-color" href={`/user/${props.postData.content.user}`}>@{props.postData.content.user}</a></div>
                 {props.postData.is_owner && !editMode ? editButton : props.postData.is_owner && editMode ? cancelButton : null}
             </div>                    
             <div className="content-box" id="">
@@ -83,10 +83,10 @@ const Post = (props) => {
             </div>
             <div className="timestamp">{new Date(props.postData.content.timestamp).toString()}</div>
             <div className="likes">
-                <button id="img" className="img" onClick={handleLike}>
-                    {hasLiked ? <i className="bi bi-star-fill"></i> : <i className="bi bi-star"></i>}
+                <button id="img" className="btn" onClick={handleLike}>
+                    {hasLiked ? <i className="bi bi-star-fill link-color"></i> : <i className="bi bi-star link-color"></i>}
                 </button>
-                <div className="like_count">{numLikes}</div>
+                <div className="align-items-center d-flex">{numLikes}</div>
             </div>
         </div>
     )

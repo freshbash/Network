@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <div class="fs-2 fw-bold">Trending</div>
+    <div class="fs-2 fw-bold mb-2">Trending</div>
     {{ data|json_script:"data" }}
     <div id="all-posts-root"></div>
 

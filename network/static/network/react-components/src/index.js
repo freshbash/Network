@@ -27,7 +27,7 @@ const AllPosts = () => {
     }, []);
 
     return (
-        <div>            
+        <div className="align-items-center d-flex flex-column">            
             {posts}
             <PageNavigator numPages={numPages} pageNum={pageNum} path={path} />
         </div>
