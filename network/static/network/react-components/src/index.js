@@ -77,11 +77,11 @@ const AllPosts = () => {
     useEffect(() => {
         const dataElement = document.querySelector("#data");
         let dataReceived = JSON.parse(dataElement.textContent);
-        setNumPages(data.num_pages);
-        setPageNum(data.page_num);
+        setNumPages(dataReceived.num_pages);
+        setPageNum(dataReceived.page_num);
         const listItems = dataReceived.page.map(post => <Post key={post.content.id} postData={post} />);
         setPosts(listItems);
-    });
+    }, []);
 
     return (
         <div>            

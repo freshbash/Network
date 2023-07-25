@@ -5,15 +5,10 @@ import { useState } from "react";
 
 const Post = (props) => {
     //State variables
-    const [postContent, setPostContent] = useState('');
-    const [numLikes, setNumLikes] = useState(0);
-    const [hasLiked, setHasLiked] = useState(false);
+    const [postContent, setPostContent] = useState(props.postData.content.post);
+    const [numLikes, setNumLikes] = useState(props.postData.content.likes);
+    const [hasLiked, setHasLiked] = useState(props.postData.liked);
     const [editMode, setEditMode] = useState(false);
-
-    //Set state according to the props received
-    setPostContent(props.postData.content.post);
-    setNumLikes(props.postData.content.likes);
-    setHasLiked(props.postData.liked);
 
     //Edit button
     const editButton = <div><button className="edit" onClick={handleEdit}><i className="bi bi-pencil"></i></button></div>;
@@ -87,10 +82,10 @@ const Post = (props) => {
                 {props.postData.is_owner && !editMode ? editButton : props.postData.is_owner && editMode ? cancelButton : null}
             </div>                    
             <div className="content-box" id="">
-                {editMode ? <textarea id="enabledTextBox">{postContent}</textarea> : <textarea disabled>{postContent}</textarea>}
+                {editMode ? <textarea id="enabledTextBox">{postContent}</textarea> : <div>{postContent}</div>}
                 {editMode ? saveButton : null}
             </div>
-            <div className="timestamp">{props.postData.content.timestamp}</div>
+            <div className="timestamp">{new Date(props.postData.content.timestamp).toString()}</div>
             <div className="likes">
                 <button id="img" className="img" onClick={handleLike}>
                     {hasLiked ? <i className="bi bi-star-fill"></i> : <i className="bi bi-star"></i>}

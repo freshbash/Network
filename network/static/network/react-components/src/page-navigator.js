@@ -7,9 +7,9 @@ const PageNavigator = (props) => {
     const tabs = []
     for (let i = 1; i <= props.numPages; i++) {        
         tabs.push(
-            <li className={props.pageNum === i ? "page-item active" : "page-item"}><a className="page-link" href="#">i</a></li>
+            <li key={"page-"+i} className={props.pageNum === i ? "page-item active" : "page-item"}><a className="page-link" href="#">{i}</a></li>
         )
-    }
+    }    
 
     return (
         <div>
