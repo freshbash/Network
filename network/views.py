@@ -219,29 +219,21 @@ def display_posts(request):
     #Get the list of people the user follows
     followings_list = [person.user for person in Follower.objects.filter(followed_by=request.user)]
     
+    #Empty array to be populated with posts of users in the above list
     posts = []
 
+    #Get all the posts of the users in the list above, format them and add them to the posts array.
     for user in followings_list:
-        user_posts = list(Post.objects.filter(user=user).order_by('-datetime').all())
-        for post in user_posts:
-            has_liked = False
-            try:
-                if(Like.objects.filter(user_post=post, liked_by=request.user)):
-                    has_liked = True
-            except Like.DoesNotExist:
-                pass
-            post_details = {"post": post, "liked": has_liked}
-            posts.append(post_details)
-
-    p = Paginator(posts, 10)
-
-    num_pages = [num for num in range(1, p.num_pages + 1)]
-
-    page = p.page(1).object_list
+        user_posts = list(Post.objects.filter(user=user).order_by('-timestamp').all())
+        formattedPosts = formatPosts(request.user, user_posts)
+        posts.extend(formattedPosts)
+    
+    #Create a pagination object, get the first page and the number of pages
+    pages, page = createPagination(posts, 10, 1)
 
 
     return render(request, "network/following.html", {
-        "page": page, "num_pages": num_pages
+        "data": {"page": page, "num_pages": pages, "page_num": 1}
     })
 
 
