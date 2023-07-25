@@ -11,7 +11,8 @@ urlpatterns = [
     path("create", views.create, name="create"),
     path("user/<str:usr_name>", views.profile, name="profile"),
     path("following", views.display_posts, name="following"),
-    path("<str:path>/page-<int:page_num>", views.load_nthpage, name="nthpage"),
+    path("page-<int:page_num>", views.load_nthpage, name="for_all_posts"),
+    path("<str:path>/page-<int:page_num>", views.load_nthpage, name="following_profile"),
     # API calls
     path("follow/<str:usr>", views.follow, name="follow"),
     path("edit/<int:post_id>", views.edit, name="edit"),
