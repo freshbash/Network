@@ -4,7 +4,9 @@
 {% block body %}
     <div class="d-flex justify-content-between">
         <div class="fs-2 fw-bold">@{{ user_data.username }}</div>
-        <div><a><i class="bi bi-pencil"></i></a></div>
+        {% if user_data.is_own_profile %}
+            <div><a href="{% url 'edit_profile' user_data.username %}"><i class="bi bi-pencil"></i></a></div>
+        {% endif %}
     </div>
     <div class="d-flex flex-row">
         <div class="d-flex flex-column">

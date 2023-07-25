@@ -141,6 +141,7 @@ def register(request):
 @login_required
 # @csrf_exempt
 def create(request):
+    #Handle form submission
     if request.method == 'POST':
         content = request.POST['content']
         # Store post on the database
@@ -205,6 +206,39 @@ def profile(request, usr_name, page_num=1):
         "component_capsule": {"username": usr_name, "follower_count": connections["followers"], "is_following": is_following},
         "data": {"page": page, "num_pages": num_pages, "page_num": page_num, "path": "/user/"+usr_name}
     })
+
+
+#Entertain requests to edit the user's profile
+@login_required
+def editProfile(request, username):
+    #Get the user object
+    user = User.objects.get(username=username)
+
+    #Handle change to user profile
+    if request.method == "POST":
+        #Get the data
+        newUserName = request.POST["newUsername"]
+        newBio = request.POST["newBio"]
+
+        #Modify the user object with the new data
+        user.username = newUserName
+        user.bio = newBio
+
+        #Save the changes
+        user.save()
+
+        #Redirect to profile page
+        return HttpResponseRedirect(reverse("profile", kwargs={"usr_name": user.username}))
+
+    #Render the profile change form
+    elif request.method == "GET":
+        return render(request, "network/editProfile.html", {
+            "userData": {"username": username, "userBio": user.bio}
+        })
+    
+    #Respond with a forbidden message
+    else:
+        return HttpResponse(status=403)
 
 
 #API endpoint to handle follow/unfollow requests

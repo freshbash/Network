@@ -10,6 +10,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("create", views.create, name="create"),
     path("user/<str:usr_name>", views.profile, name="profile"),
+    path("edit_profile/<str:username>", views.editProfile, name="edit_profile"),
     path("following", views.display_posts, name="following"),
     path("all", views.redirect, name="redirect_to_index"),
     path("<str:path>/page-<int:page_num>", views.load_nthpage, name="following"),

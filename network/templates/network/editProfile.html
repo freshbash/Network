@@ -1,0 +1,19 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block title %}
+    Edit Your Profile
+{% endblock %}
+
+{% block body %}
+    <form action="{% url 'edit_profile' userData.username %}" method="post">
+        {% csrf_token %}
+        <div>
+            <input type="text" name="newUsername" value="{{ userData.username }}">
+        </div>
+        <div>
+            <textarea name="newBio">{{ userData.userBio }}</textarea>
+        </div>
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}
