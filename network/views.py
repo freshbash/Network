@@ -144,6 +144,7 @@ def create(request):
     #Handle form submission
     if request.method == 'POST':
         content = request.POST['content']
+        print("user", request.user)
         # Store post on the database
         post = Post(user=request.user, post=content)
         post.save()
