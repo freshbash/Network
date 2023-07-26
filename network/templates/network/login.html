@@ -2,23 +2,26 @@
 
 {% block body %}
 
-    <div style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
+    <div class="d-flex justify-content-center my-4">
         <h3>Please Sign in</h3>
     </div>
 
     {% if message %}
-        <div>{{ message }}</div>
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
+    <form action="{% url 'login' %}" class="px-0 w-100" method="post">
         {% csrf_token %}
-        <div class="form-group">
+        <div class="form-group mb-3">
             <input autofocus class="form-control" type="text" name="username" placeholder="Username">
         </div>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <input class="form-control" type="password" name="password" placeholder="Password">
         </div>
-        <input class="btn-style-blue" type="submit" value="Login">
+        <input class="btn btn-primary px-4" type="submit" value="Login">
     </form>
 
     <div style="text-align: center;">

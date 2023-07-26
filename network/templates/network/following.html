@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <div class="fs-2 fw-bold">People You Follow</div>
+    <div class="fs-2 fw-bold mb-2">People You Follow</div>
     {{ data|json_script:"data" }}
     <div id="all-posts-root"></div>
 

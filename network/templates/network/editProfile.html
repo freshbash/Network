@@ -6,14 +6,20 @@
 {% endblock %}
 
 {% block body %}
-    <form action="{% url 'edit_profile' userData.username %}" method="post">
-        {% csrf_token %}
-        <div>
-            <input type="text" name="newUsername" value="{{ userData.username }}">
-        </div>
-        <div>
-            <textarea name="newBio">{{ userData.userBio }}</textarea>
-        </div>
-        <input type="submit" value="Save">
-    </form>
+    <div class="fs-3 fw-bold">Edit your profile</div>
+    <div>
+        <form action="{% url 'edit_profile' userData.username %}" class="w-100 px-0" method="post">
+            {% csrf_token %}
+            <div><label for="newUserName" class="form-label fw-bold">Username</label></div>
+            <div class="input-group mb-3">                
+                <span class="input-group-text" id="basic-addon1">@</span>
+                <input type="text" class="form-control" id="newUserName" name="newUsername" aria-label="Username" aria-describedby="basic-addon1" value="{{ userData.username }}">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label fw-bold">About</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" name="newBio" rows="10">{{ userData.userBio }}</textarea>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Save">
+        </form>
+    </div>
 {% endblock %}

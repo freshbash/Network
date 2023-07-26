@@ -7,12 +7,12 @@ const PageNavigator = (props) => {
     const tabs = []
     for (let i = 1; i <= props.numPages; i++) {        
         tabs.push(
-            <li key={"page-"+i} className={props.pageNum === i ? "page-item active" : "page-item"}><a className="page-link link-color" href={i === 1 ? props.path : `${props.path}/page-${i}`}>{i}</a></li>
+            <li key={"page-"+i} className={props.pageNum === i ? "page-item active disabled" : "page-item"}><a className="page-link link-color" href={i === 1 ? props.path : `${props.path}/page-${i}`}>{i}</a></li>
         )
     }    
 
     return (
-        <div>
+        <div className="mt-3">
             <nav>
                 <ul className="pagination">
                     <li className={props.pageNum === 1 ? "page-item disabled" : "page-item"}>

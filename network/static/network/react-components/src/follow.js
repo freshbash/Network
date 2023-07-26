@@ -43,7 +43,7 @@ const Follow = () => {
 
     return (
         <div className="d-flex flex-row">
-            <div className="d-flex flex-column">
+            <div className="align-items-center d-flex flex-column">
                 <div className="fs-5 fw-bold">Followers</div>
                 <div>{ followerCount }</div>
             </div>
