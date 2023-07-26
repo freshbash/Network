@@ -43,12 +43,12 @@ const Follow = () => {
 
     return (
         <div className="d-flex flex-row">
-            <div className="align-items-center d-flex flex-column">
+            <div className="align-items-center d-flex flex-column me-3">
                 <div className="fs-5 fw-bold">Followers</div>
                 <div>{ followerCount }</div>
             </div>
             <div>
-                <button className="btn btn-primary" onClick={handleClick}>{isFollowing ? "Unfollow" : "Follow"}</button>
+                <button className="btn custom-btn" onClick={handleClick}>{isFollowing ? "Unfollow" : "Follow"}</button>
             </div>
         </div>
     )

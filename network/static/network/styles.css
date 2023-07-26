@@ -85,22 +85,16 @@
     padding: 20px 100px;
 }
 
-.btn-style-blue{
-    border: none;
-    outline: none;
-    color: black;
-    font-weight: bold;
-    font-size: large;
-    background-color: lightblue;
-    padding: 5px 20px;
-    border-radius: 10px;
+.custom-btn {
+    background-color: slateblue;
+    color: ivory;
 }
 
-.btn-style-blue:hover{
-    border: none;
-    outline: none;
-    box-shadow: 0px 0px 5px steelblue;
+.custom-btn:hover {
+    background-color: slateblue;
+    color: ivory;
 }
+
 
 form{
     padding: 20px 100px;

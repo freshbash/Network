@@ -20,7 +20,7 @@ const Post = (props) => {
     const cancelButton = <div><button className="edit" onClick={handleEdit}><i className="bi bi-x-circle-fill"></i></button></div>;
 
     //Save edit button
-    const saveButton = <div><button className="save" onClick={handleSave}>Save</button></div>;
+    const saveButton = <div><button className="btn btn-success" onClick={handleSave}>Save</button></div>;
 
     //Handle like button click
     function handleLike() {        
@@ -81,7 +81,7 @@ const Post = (props) => {
                 {props.postData.is_owner && !editMode ? editButton : props.postData.is_owner && editMode ? cancelButton : null}
             </div>                    
             <div className="content-box" id="">
-                {editMode ? <textarea id="enabledTextBox" defaultValue={postContent}></textarea> : <div>{postContent}</div>}
+                {editMode ? <textarea id="enabledTextBox" className="form-control mb-2" defaultValue={postContent}></textarea> : <div>{postContent}</div>}
                 {editMode ? saveButton : null}
             </div>
             <div className="timestamp">{new Date(props.postData.content.timestamp).toString()}</div>
