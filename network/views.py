@@ -71,7 +71,7 @@ def index(request, pageNum=1):
     #Paginate the posts and get page 1
     num_pages, page = createPagination(formattedPosts, 10, pageNum)
     return render(request, "network/index.html", {
-        "data": {"page": page, "num_pages": num_pages, "page_num": pageNum, "path": "/all"}
+        "data": {"page": page, "num_pages": num_pages, "page_num": pageNum, "path": "/all", "user_logged_in": request.user.is_authenticated}
     })
 
 #Function that redirects all request to "/all" to "/"
@@ -204,7 +204,7 @@ def profile(request, usr_name, page_num=1):
     return render(request, "network/profile.html", {
         "user_data": {"username": usr_name, "connections": connections, "bio": profileUser.bio, "is_own_profile": is_own_profile},
         "component_capsule": {"username": usr_name, "follower_count": connections["followers"], "is_following": is_following},
-        "data": {"page": page, "num_pages": num_pages, "page_num": page_num, "path": "/user/"+usr_name}
+        "data": {"page": page, "num_pages": num_pages, "page_num": page_num, "path": "/user/"+usr_name, "user_logged_in": request.user.is_authenticated}
     })
 
 
@@ -291,7 +291,7 @@ def display_posts(request, pageNum=1):
 
     #Render template with the data
     return render(request, "network/following.html", {
-        "data": {"page": page, "num_pages": pages, "page_num": pageNum, "path": "/following"}
+        "data": {"page": page, "num_pages": pages, "page_num": pageNum, "path": "/following", "user_logged_in": request.user.is_authenticated}
     })
 
 

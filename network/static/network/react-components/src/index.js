@@ -22,7 +22,7 @@ const AllPosts = () => {
         setNumPages(dataReceived.num_pages);
         setPageNum(dataReceived.page_num);
         setPath(dataReceived.path);
-        const listItems = dataReceived.page.map(post => <Post key={post.content.id} postData={post} />);
+        const listItems = dataReceived.page.map(post => <Post key={post.content.id} postData={post} userLoggedIn={dataReceived.user_logged_in} />);
         setPosts(listItems);
     }, []);
 

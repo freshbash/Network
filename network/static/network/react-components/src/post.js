@@ -10,6 +10,9 @@ const Post = (props) => {
     const [hasLiked, setHasLiked] = useState(props.postData.liked);
     const [editMode, setEditMode] = useState(false);
 
+    //Like button
+    const likeButton = <button id="img" className="btn" onClick={handleLike}>{hasLiked ? <i className="bi bi-star-fill link-color"></i> : <i className="bi bi-star link-color"></i>}</button>;
+
     //Edit button
     const editButton = <div><button className="edit" onClick={handleEdit}><i className="bi bi-pencil"></i></button></div>;
 
@@ -74,7 +77,7 @@ const Post = (props) => {
     return (
         <div className="single-post w-100">
             <div className="d-flex flex-row justify-content-between">
-                <div id="user-name-post"><a className="link-color" href={`/user/${props.postData.content.user}`}>@{props.postData.content.user}</a></div>
+                <div id="user-name-post"><a className="link-color" href={props.userLoggedIn ? `/user/${props.postData.content.user}` : "/login"}>@{props.postData.content.user}</a></div>
                 {props.postData.is_owner && !editMode ? editButton : props.postData.is_owner && editMode ? cancelButton : null}
             </div>                    
             <div className="content-box" id="">
@@ -83,9 +86,7 @@ const Post = (props) => {
             </div>
             <div className="timestamp">{new Date(props.postData.content.timestamp).toString()}</div>
             <div className="likes">
-                <button id="img" className="btn" onClick={handleLike}>
-                    {hasLiked ? <i className="bi bi-star-fill link-color"></i> : <i className="bi bi-star link-color"></i>}
-                </button>
+                { props.userLoggedIn === false ? <a className="btn" href="/login"><i className="bi bi-star link-color"></i></a> : likeButton}
                 <div className="align-items-center d-flex">{numLikes}</div>
             </div>
         </div>
