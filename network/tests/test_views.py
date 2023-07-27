@@ -142,4 +142,65 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 200)
 
     
+    #Check the all brach of the view to display different pages of posts
+    def test_loadnthpage_all(self):
+
+        #Create 20 posts for test_user
+        for i in range(1, 21):
+            Post.objects.create(user=self.test_user, post=str(i))
+
+        #Make a GET request to get page 2 of index
+        response = self.client.get(reverse("following_p", kwargs={"path": "all", "page_num": 2}))
+
+        #Check if the returned response is 200
+        self.assertEquals(response.status_code, 200)
+
     
+    #Check the following branch of load_nthpage view
+    def test_loadnthpage_following(self):
+
+        #Make test_user follow test_user_2
+        Follower.objects.create(user=self.test_user_2, followed_by=self.test_user)
+
+        #Create 20 posts for test_user_2
+        for i in range(1, 21):
+            Post.objects.create(user=self.test_user_2, post=str(i))
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Make a GET request to go to the 2nd page of the following tab of test_user
+        response = self.client.get(reverse("following_p", kwargs={"path":"following", "page_num": 2}))
+
+        #Check if the response status code is 200
+        self.assertEquals(response.status_code, 200)
+    
+    #Check the "user" branch of load_nthpage view
+    def test_loadnthpage_user(self):
+
+        #Check for the posts of the logged in user
+
+        #Create 20 posts for test_user
+        for i in range(1, 21):
+            Post.objects.create(user=self.test_user, post=str(i))
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Make a GET request to get page 2 of posts at test_user's profile page
+        response = self.client.get(reverse("profile_p", kwargs={"path":"user", "usn":self.test_user.username, "page_num":2}))
+
+        #Check if the response status code is 200
+        self.assertEquals(response.status_code, 200)
+
+        #Check for the posts of another user
+
+        #Create 20 posts for test_user_2
+        for i in range(1, 21):
+            Post.objects.create(user=self.test_user_2, post=str(i))
+
+        #Make a GET request to get page 2 of posts created by test_user_2
+        response2 = self.client.get(reverse("profile_p", kwargs={"path":"user", "usn":self.test_user_2.username, "page_num":2}))
+
+        #Check if the response status code is 200
+        self.assertEquals(response.status_code, 200)

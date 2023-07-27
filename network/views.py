@@ -72,7 +72,7 @@ def index(request, pageNum=1):
     num_pages, page = createPagination(formattedPosts, 10, pageNum)
     return render(request, "network/index.html", {
         "data": {"page": page, "num_pages": num_pages, "page_num": pageNum, "path": "/all", "user_logged_in": request.user.is_authenticated}
-    })
+    }, status=200)
 
 #Function that redirects all request to "/all" to "/"
 def redirect(request):
@@ -277,6 +277,7 @@ def load_nthpage(request, page_num, usn=None, path=None):
     #If path is "following", then load the appropriate page of followings
     elif path == "following":
         return display_posts(request, page_num)
+    
     #If path is "user", then load the appropriate page of user posts
     elif path == "user":
         return profile(request, usn, page_num)
