@@ -203,4 +203,31 @@ class TestViews(TestCase):
         response2 = self.client.get(reverse("profile_p", kwargs={"path":"user", "usn":self.test_user_2.username, "page_num":2}))
 
         #Check if the response status code is 200
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response2.status_code, 200)
+
+    
+    #Check the follow api request
+    def test_follow_PUT(self):
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Send PUT request to follow test_user_2
+        response_follow = self.client.put(reverse("follow", args=[self.test_user_2.username]), json.dumps({
+            "follow": True
+        }))
+
+        #Check that the response status_code is 204
+        self.assertEquals(response_follow.status_code, 204)
+        #Check that an object is created in the Follower model
+        self.assertEquals(Follower.objects.all().count(), 1)
+
+        #Send PUT request to unfollow test_user_2
+        response_unfollow = self.client.put(reverse("follow", args=[self.test_user_2.username]), json.dumps({
+            "follow": False
+        }))
+
+        #Check that the response status code is 204
+        self.assertEquals(response_unfollow.status_code, 204)
+        #Check that the Follower model is now empty
+        self.assertEquals(Follower.objects.all().count(), 0)
