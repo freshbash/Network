@@ -153,7 +153,7 @@ def create(request):
     
     #Render the create post page on a get request
     elif request.method == "GET":
-        return render(request, 'network/createpost.html')
+        return render(request, 'network/createpost.html', status=200)
 
 
 #Responds with the details of the requested user
@@ -216,7 +216,7 @@ def editProfile(request, username):
     user = User.objects.get(username=username)
 
     #Handle change to user profile
-    if request.method == "POST":
+    if request.method == "POST" and request.user.username == username:
         #Get the data
         newUserName = request.POST["newUsername"]
         newBio = request.POST["newBio"]
@@ -232,10 +232,10 @@ def editProfile(request, username):
         return HttpResponseRedirect(reverse("profile", kwargs={"usr_name": user.username}))
 
     #Render the profile change form
-    elif request.method == "GET":
+    elif request.method == "GET" and request.user.username == username:
         return render(request, "network/editProfile.html", {
             "userData": {"username": username, "userBio": user.bio}
-        })
+        }, status=200)
     
     #Respond with a forbidden message
     else:

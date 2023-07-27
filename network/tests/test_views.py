@@ -9,13 +9,23 @@ class TestViews(TestCase):
     def setUp(self):
         self.client = Client()
         #Create a user
-        self.username="abc",
-        self.password=123,
+        self.username1="abc"
+        self.password1=123
+        self.username2="def"
+        self.password2="456"
+
         self.test_user = User.objects.create(
-            username=self.username,
+            username=self.username1,
             email="a@b.com",
-            password=self.password,
+            password=self.password1,
             bio="stirng"
+        )
+
+        self.test_user_2 = User.objects.create(
+            username=self.username2,
+            email="c@d.com",
+            password=self.password2,
+            bio="string"
         )
 
     #Check index view
@@ -43,7 +53,7 @@ class TestViews(TestCase):
         #Get response
         response = self.client.get(reverse("create"))
 
-        #Check whether status code is 200 OK
+        #Check whether status code is 302
         self.assertEquals(response.status_code, 302)
 
     #Check post creation
@@ -73,3 +83,47 @@ class TestViews(TestCase):
 
         #Check whether the response code is 200
         self.assertEquals(response.status_code, 200)
+
+    #Check GET request to editProfile view
+    def test_editProfile_GET(self):
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Make a GET request from test_user to get the edit profile form for test_user
+        response1 = self.client.get(reverse("edit_profile", args=[self.test_user.username]))
+
+        #Check if response1 returns 200 as status code
+        self.assertEquals(response1.status_code, 200)
+
+        #Make a GET request from test_user to get the edit profile of test_user_2
+        response2 = self.client.get(reverse("edit_profile", args=[self.test_user_2.username]))
+
+        #Check if response2 returns 403 as status code
+        self.assertEquals(response2.status_code, 403)
+
+    def test_editProfile_POST(self):
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Make a POST request from test_user to update the profile of test_user
+        response1 = self.client.post(reverse("edit_profile", args=[self.test_user.username]), {
+            "newUsername": "acb",
+            "newBio": "String"
+        })
+
+        #Check if response1 returns 302 as status code
+        self.assertEquals(response1.status_code, 302)
+
+        #Check if the updation was complete
+        self.assertEquals(User.objects.filter(username="acb", bio="String").all().count(), 1)
+
+        #Make a POST request from test_user to update the profile of test_user_2
+        response2 = self.client.get(reverse("edit_profile", args=[self.test_user_2.username]), {
+            "newUsername": "efd",
+            "newBio": "Sting"
+        })
+
+        #Check if response2 returns 403 as status code
+        self.assertEquals(response2.status_code, 403)
