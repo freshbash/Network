@@ -331,6 +331,9 @@ def edit(request, post_id):
         except Post.DoesNotExist:
             return HttpResponse("Error: Post does not exist anymore", status=401)
         
+        if (post.user.username != request.user.username):
+            return HttpResponse(status=403)
+        
         #Convert the body from the request from json to a dictionary
         data = json.loads(request.body)
 

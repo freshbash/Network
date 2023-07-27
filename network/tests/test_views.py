@@ -231,3 +231,30 @@ class TestViews(TestCase):
         self.assertEquals(response_unfollow.status_code, 204)
         #Check that the Follower model is now empty
         self.assertEquals(Follower.objects.all().count(), 0)
+
+    
+    #Check edit post api request
+    def test_editPost_PUT(self):
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Create one post each by test_user and test_user_2
+        test_user_post = Post.objects.create(user=self.test_user, post="abcd")
+        test_user_2_post = Post.objects.create(user=self.test_user_2, post="efgh")
+
+        #Send a PUT request to edit a post by test_user
+        response_own_post = self.client.put(reverse("edit", args=[test_user_post.id]), json.dumps({
+            "content": 123
+        }))
+
+        #Check if the response status code is 200
+        self.assertEquals(response_own_post.status_code, 200)
+
+        #Send a PUT request to edit a post by test_user_2
+        response_other_post = self.client.put(reverse("edit", args=[test_user_2_post.id]), json.dumps({
+            "content": 123
+        }))
+
+        #Check if the response status code is 403
+        self.assertEquals(response_other_post.status_code, 403)
