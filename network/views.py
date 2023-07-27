@@ -242,6 +242,51 @@ def editProfile(request, username):
         return HttpResponse(status=403)
 
 
+#Responds with the postings of the people the user follows
+@login_required
+def display_posts(request, pageNum=1):
+
+    #Get the list of people the user follows
+    followings_list = [person.user for person in Follower.objects.filter(followed_by=request.user)]
+    
+    #Empty array to be populated with posts of users in the above list
+    posts = []
+
+    #Get all the posts of the users in the list above, format them and add them to the posts array.
+    for user in followings_list:
+        user_posts = list(Post.objects.filter(user=user).order_by('-timestamp').all())
+        formattedPosts = formatPosts(request.user, user_posts)
+        posts.extend(formattedPosts)
+    
+    #Create a pagination object, get the first page and the number of pages
+    pages, page = createPagination(posts, 10, pageNum)
+
+    #Render template with the data
+    return render(request, "network/following.html", {
+        "data": {"page": page, "num_pages": pages, "page_num": pageNum, "path": "/following", "user_logged_in": request.user.is_authenticated}
+    }, status=200)
+
+
+#Loads the appropriate page of posts
+def load_nthpage(request, page_num, usn=None, path=None):
+
+    #If path is not specified, then load the appropriate page of index
+    if path == "all":
+        return index(request, page_num)
+    
+    #If path is "following", then load the appropriate page of followings
+    elif path == "following":
+        return display_posts(request, page_num)
+    #If path is "user", then load the appropriate page of user posts
+    elif path == "user":
+        return profile(request, usn, page_num)
+
+
+
+#API requests
+
+
+
 #API endpoint to handle follow/unfollow requests
 @login_required
 @csrf_exempt
@@ -269,48 +314,7 @@ def follow(request, usr):
         return HttpResponse(status=204)
     else:
         return HttpResponse(status=403)
-
-
-#Responds with the postings of the people the user follows
-@login_required
-def display_posts(request, pageNum=1):
-
-    #Get the list of people the user follows
-    followings_list = [person.user for person in Follower.objects.filter(followed_by=request.user)]
     
-    #Empty array to be populated with posts of users in the above list
-    posts = []
-
-    #Get all the posts of the users in the list above, format them and add them to the posts array.
-    for user in followings_list:
-        user_posts = list(Post.objects.filter(user=user).order_by('-timestamp').all())
-        formattedPosts = formatPosts(request.user, user_posts)
-        posts.extend(formattedPosts)
-    
-    #Create a pagination object, get the first page and the number of pages
-    pages, page = createPagination(posts, 10, pageNum)
-
-    #Render template with the data
-    return render(request, "network/following.html", {
-        "data": {"page": page, "num_pages": pages, "page_num": pageNum, "path": "/following", "user_logged_in": request.user.is_authenticated}
-    })
-
-
-#Loads the appropriate page of posts
-def load_nthpage(request, page_num, usn=None, path=None):
-
-    #If path is not specified, then load the appropriate page of index
-    if path == "all":
-        return index(request, page_num)
-    
-    #If path is "following", then load the appropriate page of followings
-    elif path == "following":
-        return display_posts(request, page_num)
-    #If path is "user", then load the appropriate page of user posts
-    elif path == "user":
-        return profile(request, usn, page_num)
-       
-
 
 #Entertains requests to make updates to a post's text content
 @csrf_exempt

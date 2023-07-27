@@ -127,3 +127,19 @@ class TestViews(TestCase):
 
         #Check if response2 returns 403 as status code
         self.assertEquals(response2.status_code, 403)
+
+
+    #Check if the "Following view" is working correctly
+    def test_following(self):
+
+        #Log the user in
+        self.client.force_login(self.test_user)
+
+        #Make a GET request
+        response = self.client.get(reverse("following"))
+
+        #Check if the status code in the response is 200
+        self.assertEquals(response.status_code, 200)
+
+    
+    
