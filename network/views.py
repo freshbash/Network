@@ -206,7 +206,7 @@ def profile(request, usr_name, page_num=1):
         "user_data": {"username": usr_name, "connections": connections, "bio": profileUser.bio, "is_own_profile": is_own_profile},
         "component_capsule": {"username": usr_name, "follower_count": connections["followers"], "is_following": is_following},
         "data": {"page": page, "num_pages": num_pages, "page_num": page_num, "path": "/user/"+usr_name, "user_logged_in": request.user.is_authenticated}
-    })
+    }, status=200)
 
 
 #Entertain requests to edit the user's profile

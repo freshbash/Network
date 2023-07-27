@@ -48,9 +48,11 @@ class TestViews(TestCase):
 
     #Check post creation
     def test_create_POST(self):
-
+        
+        #Log the user in
         self.client.force_login(self.test_user)
 
+        #Get a response from the post request to "create"
         response = self.client.post(reverse("create"), {
             "content": "9f8sahf"
         })
@@ -59,3 +61,15 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 302)
         #Check if the post is added
         self.assertEquals(Post.objects.all().count(), 1)
+
+    #Test whether profile view is working correctly
+    def test_profile(self):
+
+        #Log the dummy user in
+        self.client.force_login(self.test_user)
+
+        #Make a GET request to get the profile view of our dummy user
+        response = self.client.get(reverse("profile", args=[self.test_user.username]))
+
+        #Check whether the response code is 200
+        self.assertEquals(response.status_code, 200)
