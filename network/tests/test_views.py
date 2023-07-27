@@ -258,3 +258,36 @@ class TestViews(TestCase):
 
         #Check if the response status code is 403
         self.assertEquals(response_other_post.status_code, 403)
+
+    #Check like api endpoint
+    def test_like_PUT(self):
+
+        #Log test_user in
+        self.client.force_login(self.test_user)
+
+        #Create a post by test_user_2
+        post = Post.objects.create(user=self.test_user_2, post="abcd")
+
+        #Send a PUT request to like test_user_2's post
+        response1 = self.client.put(reverse("like", args=[post.id]), json.dumps({
+            "hasLiked": True
+        }))
+
+        #Check that the response status code is 200
+        self.assertEquals(response1.status_code, 200)
+        #check that the like count has incremented
+        self.assertEquals(Post.objects.get(pk=post.id).likes, 1)
+        #Check that a like object is created in the Like model
+        self.assertEquals(Like.objects.all().count(), 1)
+
+        #Send a PUT request to unlike test_user_2's post
+        response1 = self.client.put(reverse("like", args=[post.id]), json.dumps({
+            "hasLiked": False
+        }))
+
+        #Check that the response status code is 200
+        self.assertEquals(response1.status_code, 200)
+        #check that the like count has decremented
+        self.assertEquals(Post.objects.get(pk=post.id).likes, 0)
+        #Check that a like object is deleted from the Like model
+        self.assertEquals(Like.objects.all().count(), 0)
