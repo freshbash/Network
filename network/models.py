@@ -16,12 +16,6 @@ class Follower(models.Model):
     followed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
 
 
-#NO NEED! REMOVE IT!
-class Following(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followings")
-    followings = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followings")
-
-
 #Stores the posts of all users.
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
@@ -41,7 +35,7 @@ class Post(models.Model):
             'timestamp': self.timestamp
         }
 
-#INTENTION UNCLEAR
+#Stores posts and the users who liked those posts
 class Like(models.Model):
     user_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="user_post")
     liked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
