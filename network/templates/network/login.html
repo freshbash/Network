@@ -16,12 +16,12 @@
     <form action="{% url 'login' %}" class="px-0 w-100" method="post">
         {% csrf_token %}
         <div class="form-group mb-3">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+            <input autofocus class="form-control" id="username" type="text" name="username" placeholder="Username">
         </div>
         <div class="form-group mb-3">
-            <input class="form-control" type="password" name="password" placeholder="Password">
+            <input class="form-control" id="password" type="password" name="password" placeholder="Password">
         </div>
-        <input class="btn btn-primary px-4" type="submit" value="Login">
+        <input class="btn btn-primary px-4" id="submit" type="submit" value="Login">
     </form>
 
     <div style="text-align: center;">

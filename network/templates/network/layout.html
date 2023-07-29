@@ -32,17 +32,17 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a style="color: ivory;" id="create-post" class="nav-link" href="{% url 'create' %}">Create Post</a>
+                        <a style="color: ivory;" id="create" class="nav-link" href="{% url 'create' %}">Create Post</a>
                     </li>
                     <li class="nav-item">
                         <a style="color: ivory;" id="following" class="nav-link" href="{% url 'following' %}">Following</a>
                     </li>
                     <li class="nav-item">
-                        <a style="color: ivory;" id="following" class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        <a style="color: ivory;" id="logout" class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a style="color: ivory;" id="log-in" class="nav-link" href="{% url 'login' %}">Log In</a>
+                        <a style="color: ivory;" id="login" class="nav-link" href="{% url 'login' %}">Log In</a>
                     </li>
                     <li class="nav-item">
                         <a style="color: ivory;" id="register" class="nav-link" href="{% url 'register' %}">Register</a>

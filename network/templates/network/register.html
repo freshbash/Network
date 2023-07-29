@@ -21,21 +21,21 @@ Register
     <form action="{% url 'register' %}" class="px-0 w-100" method="post">
         {% csrf_token %}
         <div class="form-group mb-3">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+            <input class="form-control" autofocus type="text" id="username" name="username" placeholder="Username">
         </div>
         <div class="form-group mb-3">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
+            <input class="form-control" type="email" id="email" name="email" placeholder="Email Address">
         </div>
         <div class="form-group mb-3">
-            <textarea class="form-control" type="text" name="about" placeholder="Tell us about yourself a little"></textarea>
+            <textarea class="form-control" type="text" id="about" name="about" placeholder="Tell us about yourself a little"></textarea>
         </div>
         <div class="form-group mb-3">
-            <input class="form-control" type="password" name="password" placeholder="Password">
+            <input class="form-control" type="password" id="password" name="password" placeholder="Password">
         </div>
         <div class="form-group mb-3">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+            <input class="form-control" type="password" id="confirmation" name="confirmation" placeholder="Confirm Password">
         </div>
-        <input class="btn btn-primary" type="submit" value="Register">
+        <input class="btn btn-primary" id="register-user" type="submit" value="Register">
     </form>
 
     <div style="text-align: center;">
