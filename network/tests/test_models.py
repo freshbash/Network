@@ -2,6 +2,8 @@ from django.test import TestCase
 from network.models import User, Post
 import datetime
 
+print("unit tests")
+
 class TestModels(TestCase):
 
     def test_post_serialize(self):
