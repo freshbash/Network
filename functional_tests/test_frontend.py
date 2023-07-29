@@ -17,6 +17,18 @@ def wait(n):
 def click(browser, id):
     browser.find_element(By.ID, id).click()
 
+#Function to scroll up and down a page
+def scrollUpAndDown(browser):
+    #Scroll to the bottom of the page
+        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        #Wait for 2 seconds
+        wait(2)
+
+        #Scroll to the top
+        browser.execute_script("window.scrollTo(document.body.scrollHeight, 0);")
+
+
 class TestNetworkWebsite(StaticLiveServerTestCase):
 
     #Set up code
@@ -81,14 +93,8 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
         #Wait for 5 seconds
         wait(5)
 
-        #Scroll to the bottom of the page
-        self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        #Wait for 2 seconds
-        wait(2)
-
-        #Scroll to the top
-        self.browser.execute_script("window.scrollTo(document.body.scrollHeight, 0);")
+        #Scroll up and down the page
+        scrollUpAndDown(self.browser)
 
         #Wait for 5 seconds
         wait(5)
@@ -143,4 +149,9 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
         click(self.browser, "following")
 
         #Wait for 5
+        wait(5)
+        
+        #Scroll up and down the page
+        scrollUpAndDown(self.browser)
+        
         wait(5)
