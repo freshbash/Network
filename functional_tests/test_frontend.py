@@ -1,11 +1,21 @@
 import os
 import time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test import Client
+from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from network.models import User, Post, Follower, Like
+
+# Helpers
+
+#Function to pause
+def wait(n):
+    time.sleep(n)
+
+#Function to click an element with an id
+def click(browser, id):
+    browser.find_element(By.ID, id).click()
 
 class TestNetworkWebsite(StaticLiveServerTestCase):
 
@@ -13,21 +23,19 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
     def setUp(self):
         #Set up chrome
         self.browser = webdriver.Chrome()
-
-        self.client = Client()
         
         #Create test users
         self.test_user_1  = User.objects.create(
             username="Neil",
             email="a@b.com",
-            password=123,
+            password=make_password("123"),
             bio="Neil's bio"
         )
 
         self.test_user_2  = User.objects.create(
             username="Mani",
             email="c@d.com",
-            password=456,
+            password=make_password("456"),
             bio="Mani's bio"
         )
 
@@ -50,60 +58,76 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
     def test_all_posts_page(self):
 
         #Wait for 5 seconds
-        time.sleep(2)
+        wait(5)
 
         #Log test_user_1 in
 
         #Click on log in
-        self.browser.find_element(By.ID, "register").click()
+        click(self.browser, "login")
 
         #Wait for 5 seconds
-        time.sleep(2)
+        wait(5)
 
         #Fill in the username
-        self.browser.find_element(By.ID, "username").send_keys("Venugopal")
-
-        #Fill in the email
-        self.browser.find_element(By.ID, "email").send_keys("e@f.com")
-
-        #Fill in the bio
-        self.browser.find_element(By.ID, "about").send_keys("Venugopal's bio")
+        self.browser.find_element(By.ID, "username").send_keys(self.test_user_1.username)
 
         #Fill in the password
-        self.browser.find_element(By.ID, "password").send_keys(789)
+        self.browser.find_element(By.ID, "password").send_keys("123")
 
-        #Fill in the confirmation
-        self.browser.find_element(By.ID, "confirmation").send_keys(789)
 
         #Click the submit button
-        self.browser.find_element(By.ID, "register-user").click()
+        click(self.browser, "submit")
 
         #Wait for 5 seconds
-        time.sleep(2)
+        wait(5)
 
         #Scroll to the bottom of the page
         self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
         #Wait for 2 seconds
-        time.sleep(2)
+        wait(2)
 
         #Scroll to the top
         self.browser.execute_script("window.scrollTo(document.body.scrollHeight, 0);")
 
         #Wait for 5 seconds
-        time.sleep(2)
+        wait(5)
 
         #Click the create post link
-        self.browser.find_element(By.ID, "create").click()
+        click(self.browser, "create")
 
         #Wait for 2 seconds
-        time.sleep(2)
+        wait(2)
 
         #Fill in the post content
         self.browser.find_element(By.ID, "post-content").send_keys("My first post")
 
         #Click the post button
-        self.browser.find_element(By.ID, "post-it").click()
+        click(self.browser, "post-it")
 
         #Wait for 5 seconds
-        time.sleep(5)
+        wait(5)
+
+        #Profile page section
+
+        #Click on own profile
+        click(self.browser, "profile")
+
+        #Wait for 5 seconds
+        wait(5)
+
+        #Go to all posts page
+        click(self.browser, "all-posts")
+
+        #Click on someone else's profile
+        collection = self.browser.find_element(By.ID, "all-posts-root")
+        div = collection.find_element(By.XPATH, "./div")
+        secondPostDiv = div.find_element(By.XPATH, "./div[2]")
+        userBar = secondPostDiv.find_element(By.XPATH, "./div[1]")
+        userNameDiv = userBar.find_element(By.ID, "user-name-post")
+        userNameDiv.find_element(By.TAG_NAME, 'a').click()
+
+        
+
+        #Wait for 5 seconds
+        wait(5)
