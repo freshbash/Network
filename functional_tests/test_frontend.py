@@ -244,28 +244,46 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
         #EDIT POST
 
         #Move to all posts
-        click(self.browser, "all-posts")
+        # click(self.browser, "all-posts")
 
-        wait(10)
+        # wait(10)
 
-        #Click on someone else's profile
+        # #Click on edit button on the post
+        # collection = self.browser.find_element(By.ID, "all-posts-root")
+        # div = collection.find_element(By.XPATH, "./div")
+        # firstPostDiv = div.find_element(By.XPATH, "./div[1]")
+        # userBar = firstPostDiv.find_element(By.XPATH, "./div[1]")
+        # editDiv = userBar.find_element(By.XPATH, "./div[2]")
+        # editDiv.find_element(By.TAG_NAME, "button").click()
+
+        # #Change the text
+        # # currText = self.browser.find_element(By.ID, "enabledTextBox").get_attribute("value")
+
+        # wait(5)
+
+        # self.browser.find_element(By.ID, "enabledTextBox").send_keys("modified")
+
+        # wait(5)
+
+        # #Click the save button
+        # self.browser.find_element(By.ID, "save").click()
+
+        # wait(10)
+
+        #LIKE/UNLIKE
+
+        #Select the 2nd post's like button
         collection = self.browser.find_element(By.ID, "all-posts-root")
         div = collection.find_element(By.XPATH, "./div")
-        firstPostDiv = div.find_element(By.XPATH, "./div[1]")
-        userBar = firstPostDiv.find_element(By.XPATH, "./div[1]")
-        editDiv = userBar.find_element(By.XPATH, "./div[2]")
-        editDiv.find_element(By.TAG_NAME, "button").click()
-
-        #Change the text
-        # currText = self.browser.find_element(By.ID, "enabledTextBox").get_attribute("value")
+        secondPostDiv = div.find_element(By.XPATH, "./div[2]")
+        fourthSubDiv = secondPostDiv.find_element(By.XPATH, "./div[4]")
+        likeButton = fourthSubDiv.find_element(By.TAG_NAME, "button")
+        #Like
+        likeButton.click()
 
         wait(5)
 
-        self.browser.find_element(By.ID, "enabledTextBox").send_keys("modified")
-
-        wait(5)
-
-        #Click the save button
-        self.browser.find_element(By.ID, "save").click()
+        #Unlike
+        likeButton.click()
 
         wait(5)
