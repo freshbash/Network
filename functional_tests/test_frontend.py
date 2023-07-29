@@ -55,9 +55,9 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
 
         #Create 20 posts, 10 each for both users created
         for i in range(1, 21):
-            Post.objects.create(user=self.test_user_2, post="Post number: "+str(i)+" by user: "+self.test_user_2.username)
-        for i in range(21, 41):
             Post.objects.create(user=self.test_user_1, post="Post number: "+str(i)+" by user: "+self.test_user_1.username)
+        for i in range(21, 41):
+            Post.objects.create(user=self.test_user_2, post="Post number: "+str(i)+" by user: "+self.test_user_2.username)
 
         #Make a get request to the appropriate page
         self.browser.get(self.live_server_url)
@@ -92,183 +92,186 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
         # #Click the submit button
         click(self.browser, "submit")
 
-        # #Wait for 5 seconds
-        # wait(5)
+        #Wait for 5 seconds
+        wait(5)
 
-        # #Scroll up and down the page
-        # scrollDown(self.browser)
-        # scrollUp(self.browser)
+        #Scroll up and down the page
+        scrollDown(self.browser)
+        scrollUp(self.browser)
 
-        # #Wait for 5 seconds
-        # wait(5)
+        #Wait for 5 seconds
+        wait(5)
 
-        # #Click the create post link
-        # click(self.browser, "create")
+        #Click the create post link
+        click(self.browser, "create")
 
-        # #Wait for 2 seconds
-        # wait(2)
+        #Wait for 2 seconds
+        wait(2)
 
-        # #Fill in the post content
-        # self.browser.find_element(By.ID, "post-content").send_keys("My first post")
+        #Fill in the post content
+        self.browser.find_element(By.ID, "post-content").send_keys("My first post")
 
-        # #Click the post button
-        # click(self.browser, "post-it")
+        #Click the post button
+        click(self.browser, "post-it")
 
-        # #Wait for 5 seconds
-        # wait(5)
+        #Wait for 5 seconds
+        wait(5)
 
-        # #Profile page section
+        #Profile page section
 
-        # #Click on own profile
-        # click(self.browser, "profile")
+        #Click on own profile
+        click(self.browser, "profile")
 
-        # #Wait for 5 seconds
-        # wait(5)
+        #Wait for 5 seconds
+        wait(5)
 
-        # #Go to all posts page
-        # click(self.browser, "all-posts")
+        #Go to all posts page
+        click(self.browser, "all-posts")
 
-        # #Click on someone else's profile
-        # collection = self.browser.find_element(By.ID, "all-posts-root")
-        # div = collection.find_element(By.XPATH, "./div")
-        # secondPostDiv = div.find_element(By.XPATH, "./div[2]")
-        # userBar = secondPostDiv.find_element(By.XPATH, "./div[1]")
-        # userNameDiv = userBar.find_element(By.ID, "user-name-post")
-        # userNameDiv.find_element(By.TAG_NAME, 'a').click()
+        #Click on someone else's profile
+        collection = self.browser.find_element(By.ID, "all-posts-root")
+        div = collection.find_element(By.XPATH, "./div")
+        secondPostDiv = div.find_element(By.XPATH, "./div[2]")
+        userBar = secondPostDiv.find_element(By.XPATH, "./div[1]")
+        userNameDiv = userBar.find_element(By.ID, "user-name-post")
+        userNameDiv.find_element(By.TAG_NAME, 'a').click()
 
-        # wait(2)
+        wait(2)
 
-        # scrollDown(self.browser)
-        # scrollUp(self.browser)
+        scrollDown(self.browser)
+        scrollUp(self.browser)
 
-        # #Click the follow/unfollow button
-        # ContainerDiv = self.browser.find_element(By.ID, "follow-button")
-        # nestedDiv = ContainerDiv.find_element(By.XPATH, "./div")
-        # followButtonContainerDiv = nestedDiv.find_element(By.XPATH, "./div[2]")
+        #Click the follow/unfollow button
+        ContainerDiv = self.browser.find_element(By.ID, "follow-button")
+        nestedDiv = ContainerDiv.find_element(By.XPATH, "./div")
+        followButtonContainerDiv = nestedDiv.find_element(By.XPATH, "./div[2]")
 
-        # for i in range(3):
-        #     followButtonContainerDiv.find_element(By.TAG_NAME, "button").click()
-        #     wait(2)
+        for i in range(3):
+            followButtonContainerDiv.find_element(By.TAG_NAME, "button").click()
+            wait(2)
 
-        # #Wait for 5 seconds
-        # wait(5)
+        #Wait for 5 seconds
+        wait(5)
 
-        # #Click following section link
-        # click(self.browser, "following")
+        #Click following section link
+        click(self.browser, "following")
 
-        # #Wait for 5
-        # wait(5)
+        #Wait for 5
+        wait(5)
         
-        # #Scroll up and down the page
-        # scrollDown(self.browser)
-        # scrollUp(self.browser)
+        #Scroll up and down the page
+        scrollDown(self.browser)
+        scrollUp(self.browser)
         
-        # wait(5)
+        wait(5)
 
-        # #PAGINATION
+        #PAGINATION
 
-        # #return to all posts
-        # # click(self.browser, "all-posts")
+        #return to all posts
+        click(self.browser, "all-posts")
 
-        # #Scroll to the bottom and click on next two times
-        # for i in range(2):
-        #     wait(5)
+        #Scroll to the bottom and click on next two times
+        for i in range(2):
+            wait(5)
 
-        #     #Scroll to the bottom
-        #     scrollDown(self.browser)
+            #Scroll to the bottom
+            scrollDown(self.browser)
 
-        #     wait(5)
+            wait(5)
 
-        #     #Click the next button
-        #     click(self.browser, "next")
+            #Click the next button
+            click(self.browser, "next")
 
-        # wait(5)
+        wait(5)
 
-        # scrollDown(self.browser)
+        scrollDown(self.browser)
 
-        # wait(5)
+        wait(5)
 
-        # #click the prev button
-        # click(self.browser, "prev")
+        #click the prev button
+        click(self.browser, "prev")
 
-        # wait(5)
+        wait(5)
 
-        # scrollDown(self.browser)
+        scrollDown(self.browser)
 
-        # wait(5)
+        wait(5)
 
-        # #Move to profile page
+        #Move to profile page
 
-        # scrollUp(self.browser)
+        scrollUp(self.browser)
 
-        # wait(2)
+        wait(2)
 
-        # click(self.browser, "profile")
+        click(self.browser, "profile")
 
-        # wait(5)
+        wait(5)
 
-        # scrollDown(self.browser)
+        scrollDown(self.browser)
 
-        # wait(5)
+        wait(5)
 
-        # click(self.browser, "next")
+        click(self.browser, "next")
 
-        # wait(5)
+        wait(5)
 
-        # scrollDown(self.browser)
+        scrollDown(self.browser)
 
-        # wait(5)
+        wait(5)
 
-        # #Move to following page
+        #Move to following page
 
-        # scrollUp(self.browser)
+        scrollUp(self.browser)
 
-        # wait(2)
+        wait(2)
 
-        # click(self.browser, "following")
+        click(self.browser, "following")
 
-        # wait(5)
+        wait(5)
 
-        # scrollDown(self.browser)
+        scrollDown(self.browser)
 
-        # wait(5)
+        wait(5)
 
-        # click(self.browser, "next")
+        click(self.browser, "next")
 
-        # wait(5)
+        wait(5)
 
-        # scrollDown(self.browser)
+        scrollDown(self.browser)
 
         wait(5)
 
         #EDIT POST
 
-        #Move to all posts
-        # click(self.browser, "all-posts")
+        # Move to all posts
 
-        # wait(10)
+        scrollUp(self.browser)
 
-        # #Click on edit button on the post
-        # collection = self.browser.find_element(By.ID, "all-posts-root")
-        # div = collection.find_element(By.XPATH, "./div")
-        # firstPostDiv = div.find_element(By.XPATH, "./div[1]")
-        # userBar = firstPostDiv.find_element(By.XPATH, "./div[1]")
-        # editDiv = userBar.find_element(By.XPATH, "./div[2]")
-        # editDiv.find_element(By.TAG_NAME, "button").click()
+        click(self.browser, "all-posts")
 
-        # #Change the text
-        # # currText = self.browser.find_element(By.ID, "enabledTextBox").get_attribute("value")
+        wait(10)
 
-        # wait(5)
+        #Click on edit button on the post
+        collection = self.browser.find_element(By.ID, "all-posts-root")
+        div = collection.find_element(By.XPATH, "./div")
+        firstPostDiv = div.find_element(By.XPATH, "./div[1]")
+        userBar = firstPostDiv.find_element(By.XPATH, "./div[1]")
+        editDiv = userBar.find_element(By.XPATH, "./div[2]")
+        editDiv.find_element(By.TAG_NAME, "button").click()
 
-        # self.browser.find_element(By.ID, "enabledTextBox").send_keys("modified")
+        #Change the text
+        # currText = self.browser.find_element(By.ID, "enabledTextBox").get_attribute("value")
 
-        # wait(5)
+        wait(5)
 
-        # #Click the save button
-        # self.browser.find_element(By.ID, "save").click()
+        self.browser.find_element(By.ID, "enabledTextBox").send_keys(" modified")
 
-        # wait(10)
+        wait(5)
+
+        #Click the save button
+        self.browser.find_element(By.ID, "save").click()
+
+        wait(10)
 
         #LIKE/UNLIKE
 
