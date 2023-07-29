@@ -16,11 +16,11 @@ const PageNavigator = (props) => {
             <nav>
                 <ul className="pagination">
                     <li className={props.pageNum === 1 ? "page-item disabled" : "page-item"}>
-                        <a className="page-link link-color" href={props.pageNum - 1 === 1 ? `${props.path}` : `${props.path}/page-${props.pageNum - 1}`}>Previous</a>
+                        <a className="page-link link-color" href={props.pageNum - 1 === 1 ? `${props.path}` : `${props.path}/page-${props.pageNum - 1}`} id="prev" >Previous</a>
                     </li>
                     {tabs}
                     <li className={props.pageNum === props.numPages ? "page-item disabled" : "page-item"}>
-                        <a className="page-link link-color" href={`${props.path}/page-${props.pageNum + 1}`}>Next</a>
+                        <a className="page-link link-color" href={`${props.path}/page-${props.pageNum + 1}`} id="next" >Next</a>
                     </li>
                 </ul>
             </nav>
