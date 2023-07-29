@@ -55,9 +55,9 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
 
         #Create 20 posts, 10 each for both users created
         for i in range(1, 21):
-            Post.objects.create(user=self.test_user_1, post="Post number: "+str(i)+" by user: "+self.test_user_1.username)
-        for i in range(21, 41):
             Post.objects.create(user=self.test_user_2, post="Post number: "+str(i)+" by user: "+self.test_user_2.username)
+        for i in range(21, 41):
+            Post.objects.create(user=self.test_user_1, post="Post number: "+str(i)+" by user: "+self.test_user_1.username)
 
         #Make a get request to the appropriate page
         self.browser.get(self.live_server_url)
@@ -163,80 +163,109 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
         # scrollDown(self.browser)
         # scrollUp(self.browser)
         
+        # wait(5)
+
+        # #PAGINATION
+
+        # #return to all posts
+        # # click(self.browser, "all-posts")
+
+        # #Scroll to the bottom and click on next two times
+        # for i in range(2):
+        #     wait(5)
+
+        #     #Scroll to the bottom
+        #     scrollDown(self.browser)
+
+        #     wait(5)
+
+        #     #Click the next button
+        #     click(self.browser, "next")
+
+        # wait(5)
+
+        # scrollDown(self.browser)
+
+        # wait(5)
+
+        # #click the prev button
+        # click(self.browser, "prev")
+
+        # wait(5)
+
+        # scrollDown(self.browser)
+
+        # wait(5)
+
+        # #Move to profile page
+
+        # scrollUp(self.browser)
+
+        # wait(2)
+
+        # click(self.browser, "profile")
+
+        # wait(5)
+
+        # scrollDown(self.browser)
+
+        # wait(5)
+
+        # click(self.browser, "next")
+
+        # wait(5)
+
+        # scrollDown(self.browser)
+
+        # wait(5)
+
+        # #Move to following page
+
+        # scrollUp(self.browser)
+
+        # wait(2)
+
+        # click(self.browser, "following")
+
+        # wait(5)
+
+        # scrollDown(self.browser)
+
+        # wait(5)
+
+        # click(self.browser, "next")
+
+        # wait(5)
+
+        # scrollDown(self.browser)
+
         wait(5)
 
-        #PAGINATION
+        #EDIT POST
 
-        #return to all posts
-        # click(self.browser, "all-posts")
+        #Move to all posts
+        click(self.browser, "all-posts")
 
-        #Scroll to the bottom and click on next two times
-        for i in range(2):
-            wait(5)
+        wait(10)
 
-            #Scroll to the bottom
-            scrollDown(self.browser)
+        #Click on someone else's profile
+        collection = self.browser.find_element(By.ID, "all-posts-root")
+        div = collection.find_element(By.XPATH, "./div")
+        firstPostDiv = div.find_element(By.XPATH, "./div[1]")
+        userBar = firstPostDiv.find_element(By.XPATH, "./div[1]")
+        editDiv = userBar.find_element(By.XPATH, "./div[2]")
+        editDiv.find_element(By.TAG_NAME, "button").click()
 
-            wait(5)
-
-            #Click the next button
-            click(self.browser, "next")
-
-        wait(5)
-
-        scrollDown(self.browser)
+        #Change the text
+        # currText = self.browser.find_element(By.ID, "enabledTextBox").get_attribute("value")
 
         wait(5)
 
-        #click the prev button
-        click(self.browser, "prev")
+        self.browser.find_element(By.ID, "enabledTextBox").send_keys("modified")
 
         wait(5)
 
-        scrollDown(self.browser)
-
-        wait(5)
-
-        #Move to profile page
-
-        scrollUp(self.browser)
-
-        wait(2)
-
-        click(self.browser, "profile")
-
-        wait(5)
-
-        scrollDown(self.browser)
-
-        wait(5)
-
-        click(self.browser, "next")
-
-        wait(5)
-
-        scrollDown(self.browser)
-
-        wait(5)
-
-        #Move to following page
-
-        scrollUp(self.browser)
-
-        wait(2)
-
-        click(self.browser, "following")
-
-        wait(5)
-
-        scrollDown(self.browser)
-
-        wait(5)
-
-        click(self.browser, "next")
-
-        wait(5)
-
-        scrollDown(self.browser)
+        #Click the save button
+        self.browser.find_element(By.ID, "save").click()
 
         wait(5)

@@ -20,7 +20,7 @@ const Post = (props) => {
     const cancelButton = <div><button className="edit" onClick={handleEdit}><i className="bi bi-x-circle-fill"></i></button></div>;
 
     //Save edit button
-    const saveButton = <div><button className="btn btn-success" onClick={handleSave}>Save</button></div>;
+    const saveButton = <div><button id="save" className="btn btn-success" onClick={handleSave}>Save</button></div>;
 
     //Handle like button click
     function handleLike() {        
