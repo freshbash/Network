@@ -1,0 +1,6 @@
+asgiref
+chromedriver-py
+Django
+pytz
+selenium
+sqlparse
