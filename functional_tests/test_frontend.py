@@ -127,7 +127,20 @@ class TestNetworkWebsite(StaticLiveServerTestCase):
         userNameDiv = userBar.find_element(By.ID, "user-name-post")
         userNameDiv.find_element(By.TAG_NAME, 'a').click()
 
-        
+        #Click the follow/unfollow button
+        ContainerDiv = self.browser.find_element(By.ID, "follow-button")
+        nestedDiv = ContainerDiv.find_element(By.XPATH, "./div")
+        followButtonContainerDiv = nestedDiv.find_element(By.XPATH, "./div[2]")
+
+        for i in range(3):
+            followButtonContainerDiv.find_element(By.TAG_NAME, "button").click()
+            wait(2)
 
         #Wait for 5 seconds
+        wait(5)
+
+        #Click following section link
+        click(self.browser, "following")
+
+        #Wait for 5
         wait(5)
