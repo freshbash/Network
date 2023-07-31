@@ -17,6 +17,6 @@ code split across multiple files. So, either we use a bundler or we put all our 
 For better readability, we should use a bundler.
 
 2. While making the project production-ready, we need to set SECURE_SSL_REDIRECT=True in settings.py.
-This redirects all http requests to an equivalent https url. This caused some of my CI tests to fail.
-So I had to create a separate settings file with SECURE_SSL_REDIRECT set to False for testing and intructing
+This redirects all http requests to an equivalent https url. This may cause some of the CI tests to fail.
+So we need to create a separate settings file with SECURE_SSL_REDIRECT set to False and intructing
 django to use that file for testing purposes.
