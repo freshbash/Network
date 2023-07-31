@@ -3,18 +3,17 @@ on: push
 
 jobs:
     network:
-        runs-on: ubuntu-latest        
+        runs-on: ubuntu-latest
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          NAME: ${{ secrets.NAME }}
+          USER: ${{ secrets.USER_NAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          HOST: ${{ secrets.HOST }}
+          PORT: ${{ secrets.PORT }}
         steps:
           - name: Checkout code
             uses: actions/checkout@v2
-          
-            env:
-              SECRET_KEY: ${{ secrets.SECRET_KEY }}
-              NAME: ${{ secrets.NAME }}
-              USER: ${{ secrets.USER_NAME }}
-              PASSWORD: ${{ secrets.PASSWORD }}
-              HOST: ${{ secrets.HOST }}
-              PORT: ${{ secrets.PORT }}
 
           - name: Run Django unit tests
             run: |
