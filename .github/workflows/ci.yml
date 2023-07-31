@@ -8,7 +8,13 @@ jobs:
         steps:
           - name: Checkout code
             uses: actions/checkout@v2
-
+          - name: Print Environment Variables
+            run: |
+              echo "NAME: $NAME"
+              echo "USER_NAME: $USER_NAME"
+              echo "PASSWORD: $PASSWORD"
+              echo "HOST: $HOST"
+              echo "PORT: $PORT"
           - name: Run Django unit tests
             run: |
               pip3 install --user -r requirements.txt
