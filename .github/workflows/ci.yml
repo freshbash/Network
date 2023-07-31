@@ -4,13 +4,7 @@ on: push
 jobs:
     network:
         runs-on: ubuntu-latest
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          NAME: ${{ secrets.NAME }}
-          USER: ${{ secrets.USER_NAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          HOST: ${{ secrets.HOST }}
-          PORT: ${{ secrets.PORT }}
+        environment: ci_test
         steps:
           - name: Checkout code
             uses: actions/checkout@v2
