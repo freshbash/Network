@@ -6,8 +6,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code
-            uses: actions/checkout@v2
-          - name: Print Environment Variables
+            uses: actions/checkout@v2            
+          - name: Run Django unit tests
             env:
               SECRET_KEY: ${{ secrets.SECRET_KEY }}
               NAME: ${{ secrets.NAME }}
@@ -16,13 +16,5 @@ jobs:
               HOST: ${{ secrets.HOST }}
               PORT: ${{ secrets.PORT }}
             run: |
-              echo "SECRET_KEY: $SECRET_KEY"
-              echo "NAME: $NAME"
-              echo "USER_NAME: $USER_NAME"
-              echo "PASSWORD: $PASSWORD"
-              echo "HOST: $HOST"
-              echo "PORT: $PORT"
-          # - name: Run Django unit tests
-          #   run: |
-          #     pip3 install --user -r requirements.txt
-          #     python3 manage.py test network
+              pip3 install --user -r requirements.txt
+              python3 manage.py test network
