@@ -10,8 +10,18 @@ jobs:
           - name: Print Environment Variables
             env:
               SECRET_KEY: ${{ secrets.SECRET_KEY }}
+              NAME: ${{ secrets.NAME }}
+              USER_NAME: ${{ secrets.USER_NAME }}
+              PASSWORD: ${{ secrets.PASSWORD }}
+              HOST: ${{ secrets.HOST }}
+              PORT: ${{ secrets.PORT }}
             run: |
               echo "SECRET_KEY: $SECRET_KEY"
+              echo "NAME: $NAME"
+              echo "USER_NAME: $USER_NAME"
+              echo "PASSWORD: $PASSWORD"
+              echo "HOST: $HOST"
+              echo "PORT: $PORT"
           # - name: Run Django unit tests
           #   run: |
           #     pip3 install --user -r requirements.txt
