@@ -1,6 +1,8 @@
 asgiref
 chromedriver-py
-Django
+Django=4.1
+psycopg2-binary==2.9.6
+python-dotenv
 pytz
 selenium
 sqlparse
