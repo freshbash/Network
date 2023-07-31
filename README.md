@@ -2,7 +2,7 @@
 
 A text-based twitter clone
 
-##Features
+## Features
 - Create Posts
 - Follow/Unfollow users
 - Like/Unlike posts
