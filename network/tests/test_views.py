@@ -34,8 +34,8 @@ class TestViews(TestCase):
         #Get response to a get request
         response = self.client.get(reverse("index"))
 
-        #Check that the response status code is 301 and that the correct template is rendered
-        self.assertEquals(response.status_code, 301)
+        #Check that the response status code is 200 and that the correct template is rendered
+        self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "network/index.html")
     
     #Check is "redirect" function redirects correctly
@@ -44,8 +44,8 @@ class TestViews(TestCase):
         #Get response to a get request
         response = self.client.get(reverse("index_p"))
 
-        #Check that response status code is 301
-        self.assertEquals(response.status_code, 301)
+        #Check that response status code is 302
+        self.assertEquals(response.status_code, 302)
 
     #Check if "createpost.html" is getting rendered on sending a get request
     def test_create_GET(self):
@@ -53,8 +53,8 @@ class TestViews(TestCase):
         #Get response
         response = self.client.get(reverse("create"))
 
-        #Check whether status code is 301
-        self.assertEquals(response.status_code, 301)
+        #Check whether status code is 302
+        self.assertEquals(response.status_code, 302)
 
     #Check post creation
     def test_create_POST(self):
@@ -68,7 +68,7 @@ class TestViews(TestCase):
         })
 
         #Check the response code
-        self.assertEquals(response.status_code, 301)
+        self.assertEquals(response.status_code, 302)
         #Check if the post is added
         self.assertEquals(Post.objects.all().count(), 1)
 
@@ -81,8 +81,8 @@ class TestViews(TestCase):
         #Make a GET request to get the profile view of our dummy user
         response = self.client.get(reverse("profile", args=[self.test_user.username]))
 
-        #Check whether the response code is 301
-        self.assertEquals(response.status_code, 301)
+        #Check whether the response code is 200
+        self.assertEquals(response.status_code, 200)
 
     #Check GET request to editProfile view
     def test_editProfile_GET(self):
@@ -93,8 +93,8 @@ class TestViews(TestCase):
         #Make a GET request from test_user to get the edit profile form for test_user
         response1 = self.client.get(reverse("edit_profile", args=[self.test_user.username]))
 
-        #Check if response1 returns 301 as status code
-        self.assertEquals(response1.status_code, 301)
+        #Check if response1 returns 200 as status code
+        self.assertEquals(response1.status_code, 200)
 
         #Make a GET request from test_user to get the edit profile of test_user_2
         response2 = self.client.get(reverse("edit_profile", args=[self.test_user_2.username]))
@@ -113,8 +113,8 @@ class TestViews(TestCase):
             "newBio": "String"
         })
 
-        #Check if response1 returns 301 as status code
-        self.assertEquals(response1.status_code, 301)
+        #Check if response1 returns 302 as status code
+        self.assertEquals(response1.status_code, 302)
 
         #Check if the updation was complete
         self.assertEquals(User.objects.filter(username="acb", bio="String").all().count(), 1)
@@ -138,8 +138,8 @@ class TestViews(TestCase):
         #Make a GET request
         response = self.client.get(reverse("following"))
 
-        #Check if the status code in the response is 301
-        self.assertEquals(response.status_code, 301)
+        #Check if the status code in the response is 200
+        self.assertEquals(response.status_code, 200)
 
     
     #Check the all brach of the view to display different pages of posts
@@ -152,8 +152,8 @@ class TestViews(TestCase):
         #Make a GET request to get page 2 of index
         response = self.client.get(reverse("following_p", kwargs={"path": "all", "page_num": 2}))
 
-        #Check if the returned response is 301
-        self.assertEquals(response.status_code, 301)
+        #Check if the returned response is 200
+        self.assertEquals(response.status_code, 200)
 
     
     #Check the following branch of load_nthpage view
@@ -172,8 +172,8 @@ class TestViews(TestCase):
         #Make a GET request to go to the 2nd page of the following tab of test_user
         response = self.client.get(reverse("following_p", kwargs={"path":"following", "page_num": 2}))
 
-        #Check if the response status code is 301
-        self.assertEquals(response.status_code, 301)
+        #Check if the response status code is 200
+        self.assertEquals(response.status_code, 200)
     
     #Check the "user" branch of load_nthpage view
     def test_loadnthpage_user(self):
@@ -190,8 +190,8 @@ class TestViews(TestCase):
         #Make a GET request to get page 2 of posts at test_user's profile page
         response = self.client.get(reverse("profile_p", kwargs={"path":"user", "usn":self.test_user.username, "page_num":2}))
 
-        #Check if the response status code is 301
-        self.assertEquals(response.status_code, 301)
+        #Check if the response status code is 200
+        self.assertEquals(response.status_code, 200)
 
         #Check for the posts of another user
 
@@ -217,8 +217,8 @@ class TestViews(TestCase):
             "follow": True
         }))
 
-        #Check that the response status_code is 301
-        self.assertEquals(response_follow.status_code, 301)
+        #Check that the response status_code is 204
+        self.assertEquals(response_follow.status_code, 204)
         #Check that an object is created in the Follower model
         self.assertEquals(Follower.objects.all().count(), 1)
 
@@ -248,8 +248,8 @@ class TestViews(TestCase):
             "content": 123
         }))
 
-        #Check if the response status code is 301
-        self.assertEquals(response_own_post.status_code, 301)
+        #Check if the response status code is 200
+        self.assertEquals(response_own_post.status_code, 200)
 
         #Send a PUT request to edit a post by test_user_2
         response_other_post = self.client.put(reverse("edit", args=[test_user_2_post.id]), json.dumps({
@@ -273,8 +273,8 @@ class TestViews(TestCase):
             "hasLiked": True
         }))
 
-        #Check that the response status code is 301
-        self.assertEquals(response1.status_code, 301)
+        #Check that the response status code is 200
+        self.assertEquals(response1.status_code, 200)
         #check that the like count has incremented
         self.assertEquals(Post.objects.get(pk=post.id).likes, 1)
         #Check that a like object is created in the Like model
