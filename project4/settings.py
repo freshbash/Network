@@ -84,7 +84,7 @@ DATABASES = {
         'USER': os.environ.get("USER_NAME", default="taco"),
         'PASSWORD': os.environ.get("PASSWORD", default="123"),
         'HOST': os.environ.get("HOST", default="localhost"),
-        'PORT': os.environ.get("PORT", default="6971")
+        'PORT': os.environ.get("PORT", default="8000")
     }
 }
 
